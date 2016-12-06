@@ -1,7 +1,23 @@
 # QuickCheck2
 
-[![Build Status](https://travis-ci.org/Flomastruk/QuickCheck2.jl.svg?branch=master)](https://travis-ci.org/Flomastruk/QuickCheck2.jl)
+An automated testing package
+based on the [Julia implementation](https://github.com/pao/QuickCheck.jl)
+of Koen Claessen and John Hughes'
+[QuickCheck](http://www.cse.chalmers.se/~rjmh/QuickCheck/) property-based
+randomized tester,
+with additional syntactic sugar and convenient generators.
 
-[![Coverage Status](https://coveralls.io/repos/Flomastruk/QuickCheck2.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/Flomastruk/QuickCheck2.jl?branch=master)
+## Documentation
+Documentation of QuickCheck can be found on [Read The Docs](https://quickcheckjl.readthedocs.org/en/latest/).
 
-[![codecov.io](http://codecov.io/github/Flomastruk/QuickCheck2.jl/coverage.svg?branch=master)](http://codecov.io/github/Flomastruk/QuickCheck2.jl?branch=master)
+*This* README provides documentation of the additional features in **QuickCheck2**.
+
+## New Macros
+
+This version provides new macros `@test_exists`, `@test_formany`, `@test_forall`. 
+They take expressions of specific forms, parse them, automatically define
+corresponding generators for argument variables, and run tests.
+Optional argument can be given to specify number of tests. 
+Output has type `Base.Test.Pass`, `Base.Test.Fail` or `Base.Test.Error` and is adapted to work with `@testset` macro from `Base.Test`. Test logging is available.
+
+See inlined documentation and `examples/examples.jl` for more detailed information. 
