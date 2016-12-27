@@ -19,7 +19,10 @@ This package provides three macros for test generation:
 `@test_forall` takes an expression specifying one or more dummy variables,
 discrete sets of values for those variables, and an expression, and tests the
 expression substituting every combination of the variables 
-(the Cartesian product of their possible value sets).
+(the Cartesian product of their possible value sets). (In the latest Julia,
+`@test_forall x in [Collection], P(x)` is quite similar to 
+`@test for x in [Collection] P(x) end`,
+and we may deprecate / remove it for that reason.)
 
 The expression may be a conditional expression such as `P(x) --> Q(x)`,
 in which case truth may be vacuous when `P(x)` is false `\forall x` tested.
@@ -89,6 +92,14 @@ or `Base.Test.Error` in order to function seamlessly with `Base.Test.@testset`.
         @test_forall x in 1:5, x^2 < 30
         @test_forall x in 1:6, x^2 < 30
     end
+
+## See Also
+
+Also of note are these more comprehensive (and we feel complicated) packages. 
+Our goal is to provide a lightweight, ready-to-use out-of-the-box alternative:
+
+- [BaseTestAuto](https://github.com/robertfeldt/BaseTestAuto.jl)
+- [DataGenerators](https://github.com/simonpoulding/DataGenerators.jl)
 
 ## License
 
