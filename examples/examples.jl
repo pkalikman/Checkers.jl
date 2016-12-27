@@ -1,6 +1,4 @@
-using QuickCheck2
-using Base.Test
-
+using Checkers
 @testset "EXAMPLES:" begin
 
 ## Examples for @test_forall macro. Returns 4 Passes; 1 Fail; 1 Error
