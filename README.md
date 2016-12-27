@@ -1,4 +1,4 @@
-# QuickCheck2
+# Checkers.jl
 
 An automated testing package
 based on the [Julia implementation](https://github.com/pao/QuickCheck.jl)
@@ -10,7 +10,7 @@ with additional syntactic sugar and convenient generators.
 ## Documentation
 Documentation of QuickCheck can be found on [Read The Docs](https://quickcheckjl.readthedocs.org/en/latest/).
 
-*This* README provides documentation of the additional features in **QuickCheck2**.
+*This* README provides documentation of the additional features in **Checkers.jl**.
 
 ## New Macros
 
