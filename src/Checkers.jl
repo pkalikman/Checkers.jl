@@ -1,10 +1,13 @@
-module QuickCheck2
+module Checkers
 
-using Base.Test
+using Reexport
+@reexport using Base.Test
+
 import Base.Test: Result, Pass, Fail, Error, record, get_testset
 
-export property, condproperty, quantproperty
-export @test_formany, @test_forall, @test_exists, @not
+# TODO: export property, condproperty, quantproperty, @not ??
+
+export @test_formany, @test_forall, @test_exists
 
 for (dir, filename) in [
 
