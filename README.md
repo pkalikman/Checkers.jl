@@ -1,7 +1,7 @@
 # Checkers.jl
 
 Automated testing
-based on the [Julia implementation](https://github.com/pao/QuickCheck.jl)
+inspired by the [Julia implementation](https://github.com/pao/QuickCheck.jl)
 of Koen Claessen and John Hughes' [QuickCheck](http://www.cse.chalmers.se/~rjmh/QuickCheck/)
 property-based randomized tester.
 
