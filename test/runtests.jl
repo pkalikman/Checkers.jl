@@ -1,5 +1,6 @@
-using QuickCheck2
-using Base.Test
+using Checkers
+
+import Base.Test: record, finish, Result, Pass, Fail, Error, AbstractTestSet
 
 function is_tiny(x)
     abs(x) < 10.0^(-6)
@@ -13,17 +14,19 @@ function is_increasing(f::Function)
             eval(:(@test_formany -Inf<x::Float64<Inf, -Inf<y::Float64<Inf, x < y --> $f(x) < $f(y)))
 end
 
-@test isa( ( @test_exists 0<x::Float64<<1, is_tiny(x) ) , Base.Test.Pass )
+@test isa( ( @test_exists 0<x::Float64<<1, is_tiny(x) ) , Pass )
 
-## borrowed from julia/test/test.jl, Fail/Error results do not throw errors when tests are performed.
-type NoThrowTestSet <: Base.Test.AbstractTestSet
+# Borrowed from julia/test/test.jl:
+# Fail/Error results do not throw errors when tests are performed,
+# so *this* set of tests can test for expected fails / errors and pass.
+type NoThrowTestSet <: AbstractTestSet
     results::Vector
     NoThrowTestSet(desc) = new([])
 end
-Base.Test.record(ts::NoThrowTestSet, t::Base.Test.Result) = (push!(ts.results, t); t)
-Base.Test.finish(ts::NoThrowTestSet) = ts.results
+record(ts::NoThrowTestSet, t::Result) = (push!(ts.results, t); t)
+finish(ts::NoThrowTestSet) = ts.results
 
-fails = @testset NoThrowTestSet begin
+results = @testset NoThrowTestSet begin
 	#1 Fail
 	@test_formany 0<x::Float64<10, x<9 ntests = 1000
 	#2 Fail
@@ -40,28 +43,11 @@ fails = @testset NoThrowTestSet begin
 	is_increasing(x -> x^3)
 end
 
-for i in 1:3
-    @test isa(fails[i], Base.Test.Fail)
+#Now the actual expectations:
+expected = [Fail, Fail, Fail, Error, Pass, Pass, Pass]
+@testset "@test_... macros behave as expected" begin
+    for i in eachindex(expected)
+        @test isa(results[i],expected[i])
+    end
 end
 
-@test isa(fails[4],Base.Test.Error)
-
-for i in 5:7
-	@test isa(fails[i],Base.Test.Pass)
-end
-
-    #Note is_increasing is a property of the function, so what I really want
-    #this to mean is "not @test is_increasing(x->x^2)", i.e.
-    #"this test fails."
-    #This is slightly different from the @exists idea above, because
-    #(a) I'm not trying to help the test find a counterexample, but just
-    #declaring that when it does I'm happy, and
-    #(b) I'm obscuring where the property is. In other words to express this
-    #in terms of an @exists I'd have to write
-    #@exists x::Float64, y::Float64, x < y, x^2 > y^2
-    #But I don't want to think about that at *all*. I just want to say
-    #"x^2 is not increasing" and trust that random examples will figure this
-    #out.
-    #Maybe think about a syntax that makes it feasible to also specify
-    #a generator form with this sort of test, if I have some idea about
-    #how to guide it.

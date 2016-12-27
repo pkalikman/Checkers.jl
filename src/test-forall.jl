@@ -43,43 +43,48 @@ Error During Test
 ```
 """
 macro test_forall(factex::Expr)
-  ex = begin
-    try
-    if factex.head != :tuple
-        error("Expression of unsupported format for @test_forall: $factex")
-    end
-    # Defining ex
-	iterate = :()		
-	for p in factex.args[1:end-1]
-		iterate = Expr(:block,iterate.args...,:($(esc(p.args[2]))=$(esc(p.args[3]))))
-	end
-	prop = quote
-		res = res && $(esc(factex.args[end]))
-		if !res
-			fail_data = $(esc(factex.args[end]))
-			break
-		end
-	end
-	ex = Expr(:for,iterate,prop)
-  catch err
-    ex =
-        quote
-		throw($err)
-        end
-  end # try
-  ex
-  end # begin
-    #println(ex)
-    quote
-	res = true
-	fail_data = false
-	result = try
-          $ex
-          res ? Pass(:test,$(Expr(:quote, factex)), nothing, nothing) :
-                      Fail(:test,$(Expr(:quote, factex)), fail_data, nothing)
+    ex = begin
+        try
+            if factex.head != :tuple
+                error("Expression of unsupported format for @test_forall: $factex")
+            end
+            # Defining ex
+            iterate = Expr(:block)
+            for p in factex.args[1:(end-1)]
+                #TODO: Rename these intelligibly
+                key = p.args[2]
+                val = p.args[3]
+                push!(iterate.args,:($(esc(key))=$(esc(val))))
+            end
+            prop = 
+                quote
+                    res = res && $(esc(factex.args[end]))
+                    if !res
+                        fail_data = $(esc(factex.args[end]))
+                        break
+                    end
+                end
+            Expr(:for,iterate,prop)
         catch err
-          Error(:test_error,$(Expr(:quote, factex)), err, catch_backtrace())
-        end
+            quote
+                throw($err)
+            end
+        end 
+    end 
+    quote
+        res = true
+        fail_data = false
+        result = 
+            try
+                $ex
+                if res
+                    Pass(:test,$(Expr(:quote, factex)), nothing, nothing)
+                else
+                    Fail(:test,$(Expr(:quote, factex)), fail_data, nothing)
+                end
+            catch err
+                Error(:test_error,$(Expr(:quote, factex)), err, catch_backtrace())
+            end
         record(get_testset(), result)
     end
 end

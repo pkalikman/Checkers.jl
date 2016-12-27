@@ -2,10 +2,10 @@ module Checkers
 
 using Reexport
 @reexport using Base.Test
-
 import Base.Test: Result, Pass, Fail, Error, record, get_testset
 
-# TODO: export property, condproperty, quantproperty, @not ??
+#TODO: Do we need to export these?
+#export property, condproperty, quantproperty, @not
 
 export @test_formany, @test_forall, @test_exists
 
