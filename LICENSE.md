@@ -1,4 +1,4 @@
-The QuickCheck2.jl package is licensed under the MIT "Expat" License:
+The Checkers.jl package is licensed under the MIT "Expat" License:
 
 > Copyright (c) 2016: Efim Abrikosov & Philip Kalikman.
 > 
