@@ -1,5 +1,7 @@
 # Checkers.jl
 
+[![Join the chat at https://gitter.im/Checkers-jl/Lobby](https://badges.gitter.im/Checkers-jl/Lobby.svg)](https://gitter.im/Checkers-jl/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Automated testing
 inspired by the [Julia implementation](https://github.com/pao/QuickCheck.jl)
 of Koen Claessen and John Hughes' [QuickCheck](http://www.cse.chalmers.se/~rjmh/QuickCheck/)
