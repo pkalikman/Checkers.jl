@@ -4,7 +4,7 @@
 [![Join the chat at https://gitter.im/Checkers-jl/Lobby](https://badges.gitter.im/Checkers-jl/Lobby.svg)](https://gitter.im/Checkers-jl/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Automated testing macros
-inspired by the [Julia implementation](https://github.com/pao/QuickCheck.jl)
+inspired by a [Julia implementation](https://github.com/pao/QuickCheck.jl)
 of Koen Claessen and John Hughes' [QuickCheck](http://www.cse.chalmers.se/~rjmh/QuickCheck/)
 property-based randomized tester.
 
@@ -120,7 +120,7 @@ This package was co-designed and co-written by
 while each was a graduate student at Yale University.
 
 - Efim wrote the majority of the code,
-building on [the work of Patrick O'Leary](https://github.com/pao/QuickCheck.jl)
+which is based on but does not directly use [the work of Patrick O'Leary](https://github.com/pao/QuickCheck.jl)
 
 - Philip designed the majority of the functionality and syntax,
 building on [the work (in Haskell) of Koen Classen and John Hughes](http://www.cs.tufts.edu/~nr/cs257/archive/john-hughes/quick.pdf)
