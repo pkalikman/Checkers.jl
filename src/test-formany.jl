@@ -79,6 +79,7 @@ Test Passed
   Expression: (:((100 > x::Float64 > 10,x + 10 < y::Float64 << 1000,y - 5 < z::Float64 < Inf,z > x + 5)),)
 
 julia> @test_formany ntests = 1000 100>x::Float64>10, x+10<y::Float64<<1000, y-5<z::Float64<Inf, z>x+6
+String["x = 25.18875813550991","y = 35.192306691353075","z = 31.183953098939906"]
 Test Failed
   Expression: (:(ntests = 1000),:((100 > x::Float64 > 10,x + 10 < y::Float64 << 1000,y - 5 < z::Float64 < Inf,z > x + 6)))
 
@@ -96,6 +97,7 @@ Test Passed
 
 ## f(x) = x^3 is not convex on [-100,100]
 julia> @test_formany 0<a<1,-100<x<100,-100<y<100,(a*x+(1-a)*y)^3<a*x^3+(1-a)*y^3
+String["a = 0.39535367198058546","x = -13.538004569422625","y = 0.8504731053549079"]
 Test Failed
   Expression: (:((0 < a < 1,-100 < x < 100,-100 < y < 100,(a * x + (1 - a) * y) ^ 3 < a * x ^ 3 + (1 - a) * y ^ 3)),)
 
@@ -195,7 +197,6 @@ macro test_formany(exprs...)
 					num_good_args += 1
 					res = res && $(esc(prop))
 					if !res
-						fail_data = $(esc(prop))
                         break_vals = $values
 						break
 					end
@@ -229,7 +230,6 @@ macro test_formany(exprs...)
 					res = res && $(esc(prop))
 					writedlm(log_file,transpose(push!(convert(Vector{Any},$values),res)),",")
 					if !res
-						fail_data = $(esc(prop))
                         break_vals = $values
 						break
 					end
@@ -263,7 +263,6 @@ macro test_formany(exprs...)
 	return quote
 		num_good_args = 0
 		res = true
-		fail_data = false
 		result = $inner_ex
         if isa(result, Fail)
             println(result.data)

@@ -26,7 +26,7 @@ using Checkers
         @test_exists ntests = 1000 -10<x<10, x^2>99  # test passed
         @test_exists ntests = 100000 0<x<10000, x>9999 # test passed
         @test_exists 0<x<2*pi,x<y<2*pi,y<z<2*pi, sin(x)<sin(y)<sin(z)
-        @test_exists ntests = 10000 0<x<2*pi,0<y<2*pi,0<z<2*pi, x<y<z --> sin(x)<sin(y)<sin(z) 
+        @test_exists ntests = 10000 0<x<2*pi,0<y<2*pi,0<z<2*pi, x<y<z --> sin(x)<sin(y)<sin(z)
         @test_exists 0<x1<2,x1<x2<2, x1<y<x2, (x1-1)^2*(x1+1)^2<(y-1)^2*(y+1)^2<(x2-1)^2*(x2+1)^2
     end
 
@@ -42,7 +42,7 @@ end
     #Fails because of a situation akin to 11=x, 21.1=y, 16.5=z
 	@test_formany 10<x<100, x+10<y<<1000, y-5<z<Inf, x+6 < z
     #Fails because f(x) = x^3 is not convex over (-100,100)
-	@test_formany 0<a<1,-100<x<100,-100<y<100,(a*x+(1-a)*y)^3<a*x^3+(1-a)*y^3 
+	@test_formany 0<a<1,-100<x<100,-100<y<100,(a*x+(1-a)*y)^3<a*x^3+(1-a)*y^3
     #Fails because it does not do enough tests to find the unlikely witness
 	@test_exists ntests = 100 0<x<10000, x>9999
 end
@@ -57,6 +57,5 @@ end
         #because iteration over y comes earlier yet refers to value of x
 	@test_forall y in x:4, x in 0:2, 2*x < y+4
     #Errors with a DomainError because it will test log(negative values)
-    #TODO: I get an ErrorException about invalid input, not a DomainError
-	@test_formany -Inf<x<Inf, -Inf<y<Inf x<y-->log(x)<log(y) 
+	@test_formany -Inf<x<Inf, -Inf<y<Inf, x<y-->log(x)<log(y)
 end
