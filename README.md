@@ -1,6 +1,7 @@
 # Checkers.jl 🏁 🏁
 
 [![Build Status](https://travis-ci.org/pkalikman/Checkers.jl.svg?branch=master)](https://travis-ci.org/pkalikman/Checkers.jl)
+[![codecov](https://codecov.io/gh/pkalikman/Checkers.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/pkalikman/Checkers.jl)
 [![Join the chat at https://gitter.im/Checkers-jl/Lobby](https://badges.gitter.im/Checkers-jl/Lobby.svg)](https://gitter.im/Checkers-jl/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Automated testing macros
