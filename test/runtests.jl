@@ -33,7 +33,7 @@ results = @testset NoThrowTestSet begin
 	@test_exists -Inf<x::Int64<Inf, x>10000
 	#3 Fail
 	is_increasing(x -> x^2)
-	#4 Error: types of variables must be specified
+	#4 Error: generator for y receives incorrect lower and upper bounds
 	@test_formany Inf > x > 0, x<y<10, x>0
 	#5 Pass
 	@test_forall i in 1:20, 1==1
@@ -50,4 +50,3 @@ expected = [Fail, Fail, Fail, Error, Pass, Pass, Pass]
         @test isa(results[i],expected[i])
     end
 end
-

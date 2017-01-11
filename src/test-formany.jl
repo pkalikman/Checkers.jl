@@ -79,6 +79,7 @@ Test Passed
   Expression: (:((100 > x::Float64 > 10,x + 10 < y::Float64 << 1000,y - 5 < z::Float64 < Inf,z > x + 5)),)
 
 julia> @test_formany ntests = 1000 100>x::Float64>10, x+10<y::Float64<<1000, y-5<z::Float64<Inf, z>x+6
+String["x = 25.18875813550991","y = 35.192306691353075","z = 31.183953098939906"]
 Test Failed
   Expression: (:(ntests = 1000),:((100 > x::Float64 > 10,x + 10 < y::Float64 << 1000,y - 5 < z::Float64 < Inf,z > x + 6)))
 
@@ -96,6 +97,7 @@ Test Passed
 
 ## f(x) = x^3 is not convex on [-100,100]
 julia> @test_formany 0<a<1,-100<x<100,-100<y<100,(a*x+(1-a)*y)^3<a*x^3+(1-a)*y^3
+String["a = 0.39535367198058546","x = -13.538004569422625","y = 0.8504731053549079"]
 Test Failed
   Expression: (:((0 < a < 1,-100 < x < 100,-100 < y < 100,(a * x + (1 - a) * y) ^ 3 < a * x ^ 3 + (1 - a) * y ^ 3)),)
 
@@ -174,26 +176,28 @@ macro test_formany(exprs...)
 	if maxtests == 0
 		maxtests = 10*ntests
 	end
-	num_of_vars = size(var_data,1)
-	generate_values = :()
-	values = :([])
+    num_of_vars = size(var_data,1)
+	generate_values = Expr(:block)
+	values = Expr(:vect)
 	for i in 1:num_of_vars
 		next_expr = :($(esc(var_data[i,1]))=
 			   custom_generator($(esc(var_data[i,2])),$(esc(var_data[i,3])),
 			      $(esc(var_data[i,4])),$(esc(var_data[i,5])),$(esc(var_data[i,6])))(div(n,2)+3))
-		generate_values = Expr(:block,generate_values.args...,next_expr)
-		values = Expr(:vect, values.args..., :($(esc(var_data[i,1]))))
+
+        push!(generate_values.args, next_expr)
+        push!(values.args, :($(esc(var_data[i,1]))))
 	end
 #####
 	if logging == ""    ## no logging
 		inner_ex = quote try
+            break_vals = []
 			for n in 1:$maxtests
 				$generate_values
 				if $(esc(cond))
 					num_good_args += 1
 					res = res && $(esc(prop))
 					if !res
-						fail_data = $(esc(prop))
+                        break_vals = $values
 						break
 					end
 					if num_good_args >= $ntests
@@ -207,12 +211,16 @@ macro test_formany(exprs...)
  				error("Found only $num_good_args/$nt values satisfying given condition.")
 			end
 			res ? Pass(:test,$(Expr(:quote, exprs)), nothing, nothing) :
-		   	   Fail(:test,$(Expr(:quote, exprs)), fail_data, nothing)
+		   	   Fail(:test,
+                    $(Expr(:quote, exprs)),
+                    [string(s[1])*" = "*string(s[2]) for s in zip($(var_data[:,1]), break_vals)],
+                    nothing)
 		catch err
 			Error(:test_error,$(Expr(:quote, exprs)), err, catch_backtrace())
 		end end #quote #try
 	else 		## logging is a path to file where the log is written to
 		inner_ex = quote try
+            break_vals = []
 			log_file = open($logging,"a")
 			writedlm(log_file,reshape([string(s) for s in $(var_data[:,1])],(1,$num_of_vars)),",")
 			for n in 1:$maxtests
@@ -222,7 +230,7 @@ macro test_formany(exprs...)
 					res = res && $(esc(prop))
 					writedlm(log_file,transpose(push!(convert(Vector{Any},$values),res)),",")
 					if !res
-						fail_data = $(esc(prop))
+                        break_vals = $values
 						break
 					end
 					if num_good_args >= $ntests
@@ -237,7 +245,10 @@ macro test_formany(exprs...)
  				error("Found only $num_good_args/$nt values satisfying given condition.")
 			end
 			res ? Pass(:test,$(Expr(:quote, exprs)), nothing, nothing) :
-		   	   Fail(:test,$(Expr(:quote, exprs)), fail_data, nothing)
+            Fail(:test,
+                    $(Expr(:quote, exprs)),
+                    [string(s[1])*" = "*string(s[2]) for s in zip($(var_data[:,1]), break_vals)],
+                    nothing)
 		catch err
 			Error(:test_error,$(Expr(:quote, exprs)), err, catch_backtrace())
 		end end #quote #try
@@ -252,8 +263,13 @@ macro test_formany(exprs...)
 	return quote
 		num_good_args = 0
 		res = true
-		fail_data = false
 		result = $inner_ex
+        if isa(result, Fail)
+            println(result.data)
+        end
+        # if not wrapped in an appropriate testset Error/Fail will throw error
+        # since it is handled as :FallbackTestSet from Base.test
+        # see code for record(ts::FallbackTestSet, t::Union{Fail,Error})
 		record(get_testset(), result)
 	end
 end
