@@ -50,3 +50,33 @@ expected = [Fail, Fail, Fail, Error, Pass, Pass, Pass]
         @test isa(results[i],expected[i])
     end
 end
+
+results_2 = @testset NoThrowTestSet begin
+    @test_forall 100==100
+    @test_formany maxtests=100 0 < x < 10, x < 11
+    @test_exists maxtests=100 0 < x < 10, x < 10
+    @test_exists ntests=100 0 < x < 10, x < 10
+    @test_exists ntests=100 0 < x < 10, x < 9 --> x < 10
+    @test_exists maxtests=100 0 < x < 10, x < 9 --> x < 10
+    @test_exists 0 < x < 10, x < 9 --> x < 10
+    #Workaround from @TotalVerb on Julia Gitter
+    temp_file = tempname()
+    @eval (@test_formany logto=$temp_file 0 < x < 10, x < 11)
+    rm(temp_file)
+    @test_formany 0<<x<1, x < 0.001
+    #TODO: Why is this failing?
+    @test_exists ntests=1000 0<<x<1, x < 0.5
+    #But this works?
+    @test_exists ntests=1000 0<<x<1, x < 2
+    #This seems to be okay
+    @test_formany 0<<x<1, x < 2
+    @test_formany 0<<x<1, x < 0.5
+end
+
+expected_2 = [Error, Pass, Pass, Pass, Pass, Pass, Pass, 
+              Pass, Pass, Pass, Pass, Fail]
+@testset "@test_... macros behave as expected" begin
+    for i in eachindex(expected_2)
+        @test isa(results_2[i],expected_2[i])
+    end
+end
