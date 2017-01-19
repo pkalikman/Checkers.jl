@@ -1,5 +1,6 @@
-#Checkers.jl Documentation
+#Checkers.jl Documentation Outline
 
+## Manual
 
 ```@contents
 Pages = [
@@ -7,6 +8,7 @@ Pages = [
     "macros/test-formany.md",
     "macros/test-exists.md"
     ]
-Depth = 1
+Depth = 2
 ```
+
 
