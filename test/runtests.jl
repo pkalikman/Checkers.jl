@@ -59,24 +59,38 @@ results_2 = @testset NoThrowTestSet begin
     @test_exists ntests=100 0 < x < 10, x < 9 --> x < 10
     @test_exists maxtests=100 0 < x < 10, x < 9 --> x < 10
     @test_exists 0 < x < 10, x < 9 --> x < 10
+end
+expected_2 = [Error, Pass, Pass, Pass, Pass, Pass, Pass] 
+
+results_3 = @testset NoThrowTestSet begin
     #Workaround from @TotalVerb on Julia Gitter
     temp_file = tempname()
     @eval (@test_formany logto=$temp_file 0 < x < 10, x < 11)
     rm(temp_file)
-    @test_formany 0<<x<1, x < 0.001
-    #TODO: Why is this failing?
-    @test_exists ntests=1000 0<<x<1, x < 0.5
-    #But this works?
-    @test_exists ntests=1000 0<<x<1, x < 2
-    #This seems to be okay
+
+    #Should pass
     @test_formany 0<<x<1, x < 2
+
+    #Should fail...formany wants all of them
     @test_formany 0<<x<1, x < 0.5
+
+    #Should pass
+    @test_exists ntests=1000 0<<x<1, x < 2
+
+    #This should fail, because x will veer towards 1
+    @test_exists ntests=1000 0<<x<1, x < 0.5
+
+    #This should pass. Great!
+    @test_exists ntests=1000 0<x<<1, x < 0.5
+
+    #This should pass too.
+    @test_exists ntests=1000 0<x<<1, x < 0.01
+
 end
 
-expected_2 = [Error, Pass, Pass, Pass, Pass, Pass, Pass, 
-              Pass, Pass, Pass, Pass, Fail]
+expected_3 = [Pass, Pass, Fail, Pass, Fail, Pass, Pass]
 @testset "@test_... macros behave as expected" begin
-    for i in eachindex(expected_2)
-        @test isa(results_2[i],expected_2[i])
+    for i in eachindex(expected_3)
+        @test isa(results_3[i],expected_3[i])
     end
 end
