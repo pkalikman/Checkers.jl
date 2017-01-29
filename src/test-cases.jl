@@ -1,6 +1,6 @@
 macro test_cases(exprs...)
     #  identify pseduo-keyword arguments
-    maxtests = 0; ntests = 0; logging = ""
+    maxtests = 0; ntests = 0; logto = ""
     # working mode
     working_mode = :none # can be :test_formany or :test_exists
 
@@ -24,9 +24,13 @@ macro test_cases(exprs...)
             elseif ex.args[1] == :maxtests
                 maxtests = ex.args[2]
             elseif ex.args[1] == :logto
-                logging = ex.args[2]
+                logto = ex.args[2]
             elseif ex.args[1] == :mode
-                mode = ex.args[2]
+                if ex.args[2] in (:test_formany, :test_exists, :none)
+                    working_mode = ex.args[2]
+                else
+                    error("Unrecognized mode $(ex.args[2]).")
+                end
             else
                 error("Invalid macro input $ex.")
             end
@@ -57,31 +61,78 @@ macro test_cases(exprs...)
         push!(values.args, :($(esc(var_data[i,1]))))
     end
 
+    # defining innermost expression in the loop running tests
+    inner_ex = quote
+        num_good_args += 1
+        tmp = $(esc(prop))
+        num_passes += tmp
+
+        # possibly log here
+
+        # possibly record break_values and break if mode = test_exists/test_formany
+
+        if num_good_args >= $ntests
+            break
+        end
+    end
+
+    if logto != ""
+        insert!(inner_ex.args, length(inner_ex.args) - 1,
+         quote
+             writedlm(log_file, transpose(push!(convert(Vector{Any},$values),tmp)), ",")
+         end
+        )
+    end
+
+    if working_mode == :test_formany
+        insertion_ex = quote
+            if !tmp
+                break_values = $values
+                break_test = true
+                break
+            end
+        end
+
+        insert!(inner_ex.args, length(inner_ex.args) - 1, insertion_ex)
+    end
+
+    if working_mode == :test_exists
+        insertion_ex = quote
+            if tmp
+                break_values = $values
+                break_test = true
+                break
+            end
+        end
+
+        insert!(inner_ex.args, length(inner_ex.args) - 1, insertion_ex)
+    end
+
     # defining output expression
     output_expr = quote
-        test_success = false
         num_good_args = 0
-
         num_passes = 0
         break_values = []
+        break_test = false
+
+        # possibly open file to log values
 
         for n in 1:$maxtests
             $generate_values
             if $(esc(cond))
-				num_good_args += 1
-
-                tmp = $(esc(prop))
-                num_passes += tmp
-                if num_good_args >= $ntests
-                    break
-                end
+                $inner_ex
             end
         end
 
-        if num_good_args < $ntests
+        if !break_test && num_good_args < $ntests
             nt = $ntests
             error("Found only $num_good_args/$nt values satisfying given condition.")
         end
+
+        # if logging close file here
+
+        # if mode == none print the result
+        # else specify result in Pass/Fail format
     end
 
     # depending on pseudo-args modify the output_expr
@@ -93,20 +144,53 @@ macro test_cases(exprs...)
         push!(output_expr.args, show_result_expr)
     end
 
-
-    # writedlm(log_file,transpose(push!(convert(Vector{Any},$values),res)),",")
-    if logging != ""
+    if logto!= ""
         logging_expr = quote
-            log_file = open($logging,"a")
+            log_file = open($logto,"a")
             writedlm(log_file,
                 reshape([string(s) for s in $(var_data[:,1])],(1,$num_of_vars)),",")
         end
 
-
-        insert!(output_expr.args[10].args[2].args[4].args[2].args, 5,
-            quote writedlm(log_file,transpose(push!(convert(Vector{Any},$values),tmp)),",") end)
         unshift!(output_expr.args, logging_expr)
         push!(output_expr.args, quote close(log_file) end)
+    end
+
+    if working_mode == :test_formany
+        insertion_ex = quote
+            result = !break_test ?
+                 Pass(:test,$(Expr(:quote, exprs)), nothing, nothing) :
+                 Fail(:test,
+                    $(Expr(:quote, exprs)),
+                    [string(s[1])*" = "*string(s[2]) for s in zip($(var_data[:,1]), break_values)],
+                    nothing)
+
+            if isa(result, Fail)
+                println(result.data)
+            end
+
+            record(get_testset(), result)
+        end
+
+        push!(output_expr.args, insertion_ex)
+    end
+
+    if working_mode == :test_exists
+        insertion_ex = quote
+            result = break_test ?
+                Pass(:test,
+                    $(Expr(:quote, exprs)),
+                    [string(s[1])*" = "*string(s[2]) for s in zip($(var_data[:,1]), break_values)],
+                    nothing) :
+                Fail(:test,$(Expr(:quote, exprs)), nothing, nothing)
+
+            if isa(result, Pass)
+                println(result.data)
+            end
+
+            record(get_testset(), result)
+        end
+
+        push!(output_expr.args, insertion_ex)
     end
 
     return output_expr
