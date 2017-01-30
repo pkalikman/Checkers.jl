@@ -1,4 +1,8 @@
 macro test_cases(exprs...)
+    # everything is embedded in try/catch block and if it can't be compiled,
+    # cathch-part returns Error type object from Base.test
+    output_expr = try
+
     #  identify pseduo-keyword arguments
     maxtests = 0; ntests = 0; logto = ""
     # working mode
@@ -64,7 +68,7 @@ macro test_cases(exprs...)
     # defining innermost expression in the loop running tests
     inner_ex = quote
         num_good_args += 1
-        tmp = $(esc(prop))
+        tmp = $(esc(prop))::Bool
         num_passes += tmp
 
         # possibly log here
@@ -191,6 +195,23 @@ macro test_cases(exprs...)
         end
 
         push!(output_expr.args, insertion_ex)
+    end
+
+    output_expr = Expr(:try, output_expr, :err,
+        quote
+            result = Error(:test_error, $(Expr(:quote, exprs)), err, catch_backtrace())
+            record(get_testset(), result)
+        end
+        )
+
+    output_expr
+
+    # if something of the above didn't work, will return error
+    catch err
+        output_expr = quote
+        	result = Error(:test_error, $(Expr(:quote, exprs)), $err, catch_backtrace())
+            record(get_testset(), result)
+        end
     end
 
     return output_expr

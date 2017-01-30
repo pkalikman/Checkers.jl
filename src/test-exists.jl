@@ -1,7 +1,6 @@
 """
     @test_exists [ntests = 100][maxtests = 1000][logto = ""][argument_data, prop]
 
-
 Generates sample of values for arguments in proposition. Returns `Pass`
 if proposition holds for at least one value in the sample, `Fail` if proposition
 does not hold for any values, and `Error` if a part of code could not
@@ -40,131 +39,11 @@ Error During Test
 ```
 """
 macro test_exists(exprs...)
-inner_ex = try
-	maxtests = 0; ntests = 0
-	prop = :(); cond = :()
-	logging  = ""
-	var_data = Array(Any,1,6)
-	for ex in exprs
-		if isa(ex, Expr) && ex.head == :tuple
-			var_data = parse_argument_data(ex)
-			if ex.args[end].head == :-->
-				prop = ex.args[end].args[2]
-				cond = ex.args[end].args[1]
-			else
-				prop = ex.args[end]
-				cond = true
-			end
-		elseif isa(ex, Expr) && ex.head == :(=)
-			if ex.args[1] == :ntests
-				ntests = ex.args[2]
-			elseif ex.args[1] == :maxtests
-				maxtests = ex.args[2]
-			elseif ex.args[1]== :logto
-				logging = ex.args[2]
-			else
-				error("Invalid macro input $ex.")
-			end
-		else
-			error("Invalid macro input $ex.")
-		end
-	end
-	if ntests == 0
-		ntests = 100
-	end
-	if maxtests == 0
-		maxtests = 10*ntests
-	end
-    num_of_vars = size(var_data,1)
-	generate_values = Expr(:block)
-	values = Expr(:vect)
-	for i in 1:num_of_vars
-		next_expr = :($(esc(var_data[i,1]))=
-			   custom_generator($(esc(var_data[i,2])),$(esc(var_data[i,3])),
-			      $(esc(var_data[i,4])),$(esc(var_data[i,5])),$(esc(var_data[i,6])))(div(n,2)+3))
-
-        push!(generate_values.args, next_expr)
-        push!(values.args, :($(esc(var_data[i,1]))))
-	end
-#####
-	if logging == ""    ## no logging
-		inner_ex = quote try
-            break_vals = []
-			for n in 1:$maxtests
-				$generate_values
-				if $(esc(cond))
-					num_good_args += 1
-					res = res || $(esc(prop))
-					if res
-                        break_vals = $values
-						break
-					end
-					if num_good_args >= $ntests
-						break
-					end
-				end
-			end
-		        # no example but insufficient amount of tests
-			if !res && num_good_args<$ntests
-				nt = $ntests
- 				error("Found only $num_good_args/$nt values satisfying given condition.")
-			end
-			res ? Pass(:test,
-                        $(Expr(:quote, exprs)),
-                        [string(s[1])*" = "*string(s[2]) for s in zip($(var_data[:,1]), break_vals)],
-                        nothing) :
-		   	   Fail(:test,$(Expr(:quote, exprs)), nothing, nothing)
-		catch err
-			Error(:test_error,$(Expr(:quote, exprs)), err, catch_backtrace())
-		end end #quote #try
-	else 		## logging is a path to file where the log is written to
-		inner_ex = quote try
-            break_vals = []
-			log_file = open($logging,"a")
-			writedlm(log_file,reshape([string(s) for s in $(var_data[:,1])],(1,$num_of_vars)),",")
-			for n in 1:$maxtests
-				$generate_values
-				if $(esc(cond))
-					num_good_args += 1
-					res = res || $(esc(prop))
-					writedlm(log_file,transpose(push!(convert(Vector{Any},$values),res)),",")
-					if res
-						break
-					end
-					if num_good_args >= $ntests
-						break
-					end
-				end
-			end
-			close(log_file)
-		        # no example but insufficient amount of tests
-			if !res && num_good_args<$ntests
-				nt = $ntests
- 				error("Found only $num_good_args/$nt values satisfying given condition.")
-			end
-			res ? Pass(:test,
-                        $(Expr(:quote, exprs)),
-                        [string(s[1])*" = "*string(s[2]) for s in zip($(var_data[:,1]), break_vals)],
-                        nothing) :
-		   	   Fail(:test,$(Expr(:quote, exprs)), nothing, nothing)
-		catch err
-			Error(:test_error,$(Expr(:quote, exprs)), err, catch_backtrace())
-		end end #quote #try
-	end
-	inner_ex
-#####
-   catch err
-	inner_ex = quote
-		Error(:test_error,$(Expr(:quote, exprs)), $err, catch_backtrace())
-	end
-   end # try defining inner_ex
-	return quote
-		num_good_args = 0
-		res = false
-		result = $inner_ex
-        if isa(result, Pass)
-            println(result.data)
-        end
-		record(get_testset(), result)
-	end
+    outex = Expr(:macrocall, Symbol("@test_cases"))
+    for ex in exprs
+        push!(outex.args, esc(ex))
+    end
+    ex1 = Expr(:(=), :mode, :test_exists)
+    push!(outex.args, esc(ex1))
+    return outex
 end
