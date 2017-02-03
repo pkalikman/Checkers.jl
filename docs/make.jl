@@ -18,7 +18,8 @@ makedocs(modules  = [Checkers],
          ]
 )
 
-deploydocs(#deps   = Deps.pip("mkdocs","python-markdown-math"),
+deploydocs(deps   = Deps.pip("mkdocs","python-markdown-math"),
            repo   = "github.com/pkalikman/Checkers.jl.git",
            target = "build",
-           julia  = "0.5.0")
+           julia  = "0.5.0",
+           osname = "osx")
