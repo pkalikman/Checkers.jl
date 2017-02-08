@@ -2,7 +2,8 @@
 
 [![Build Status](https://travis-ci.org/pkalikman/Checkers.jl.svg?branch=master)](https://travis-ci.org/pkalikman/Checkers.jl)
 [![codecov](https://codecov.io/gh/pkalikman/Checkers.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/pkalikman/Checkers.jl)
-[![Documentation Status](https://readthedocs.org/projects/checkersjl/badge/?version=latest)](http://checkersjl.readthedocs.io/en/latest/?badge=latest)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://pkalikman.github.io/Checkers.jl/stable)
+[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://pkalikman.github.io/Checkers.jl/latest)
 [![Join the chat at https://gitter.im/Checkers-jl/Lobby](https://badges.gitter.im/Checkers-jl/Lobby.svg)](https://gitter.im/Checkers-jl/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
