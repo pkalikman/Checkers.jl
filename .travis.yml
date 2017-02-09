@@ -18,7 +18,7 @@ script:
   - julia -e 'Pkg.clone(pwd())'
   - julia -e 'Pkg.test("Checkers",coverage=true)'
 after_success:
-  - julia -e julia -e 'Pkg.add("Documenter")'
+  - julia -e 'Pkg.add("Documenter")'
   - julia -e 'cd(Pkg.dir("Checkers")); include(joinpath("docs", "make.jl"))'
   #- julia -e 'cd(Pkg.dir("Checkers")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
   - julia -e 'cd(Pkg.dir("Checkers")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
