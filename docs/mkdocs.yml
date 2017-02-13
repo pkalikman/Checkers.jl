@@ -4,19 +4,28 @@ site_description:    QuickCheck-like Automated Testing Macros for Julia
 site_author:         pkalikman
 theme:               readthedocs
 
-extra_css:
-  - assets/Documenter.css
-
-extra_javascript:
-  - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML
-  - assets/mathjaxhelper.js
+extra:
+  palette:
+    primary: 'deep purple'
+    accent: 'cyan'
+  social:
+    - type: 'github'
+      link: 'https://github.com/Datseris/DynamicalBilliards.jl'
 
 markdown_extensions:
+  - admonition
   - codehilite
   - extra
   - tables
   - fenced_code
   - mdx_math
+
+extra_css:
+  - assets/Documenter.css
+
+extra_javascript:
+  - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML
+  - assets/mathjaxhelper.js
 
 docs_dir: 'build'
 
