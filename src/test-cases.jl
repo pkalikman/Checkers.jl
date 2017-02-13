@@ -11,7 +11,7 @@ macro test_cases(exprs...)
     prop = :(); cond = :()
 
     # parsing expression
-	var_data = Array(Any,1,6)
+	var_data = Array(Any, 3, 1)
     for ex in exprs
         if isa(ex, Expr) && ex.head == :tuple  # parsing statements about
             var_data = parse_argument_data(ex) # variables, condition and
@@ -53,18 +53,18 @@ macro test_cases(exprs...)
 
     # creating a block expression `generate_values` and expression values
     # that stores references to generated variable
-    num_of_vars = size(var_data,1)
+    num_of_vars = size(var_data,2)
     generate_values = Expr(:block)
     values = Expr(:vect)
     for i in 1:num_of_vars
-        next_expr = :($(esc(var_data[i,1]))=
-               custom_generator($(esc(var_data[i,2])),$(esc(var_data[i,3])),
-                  $(esc(var_data[i,4])),$(esc(var_data[i,5])),$(esc(var_data[i,6])))(div(n,2)+3))
-
+        params = Expr(:call, :custom_generator, esc(var_data[2,i]))
+        for p in var_data[3,i]
+            push!(params.args, esc(p))
+        end
+        next_expr = :($(esc(var_data[1,i]))= $params(div(n,2)+3))
         push!(generate_values.args, next_expr)
-        push!(values.args, :($(esc(var_data[i,1]))))
+        push!(values.args, :($(esc(var_data[1,i]))))
     end
-
     # defining innermost expression in the loop running tests
     inner_ex = quote
         num_good_args += 1
@@ -123,6 +123,7 @@ macro test_cases(exprs...)
 
         for n in 1:$maxtests
             $generate_values
+
             if $(esc(cond))
                 $inner_ex
             end
@@ -152,7 +153,7 @@ macro test_cases(exprs...)
         logging_expr = quote
             log_file = open($logto,"a")
             writedlm(log_file,
-                reshape([string(s) for s in $(var_data[:,1])],(1,$num_of_vars)),",")
+                reshape([string(s) for s in $(var_data[1,:])],(1,$num_of_vars)),",")
         end
 
         unshift!(output_expr.args, logging_expr)
@@ -165,7 +166,7 @@ macro test_cases(exprs...)
                  Pass(:test,$(Expr(:quote, exprs)), nothing, nothing) :
                  Fail(:test,
                     $(Expr(:quote, exprs)),
-                    [string(s[1])*" = "*string(s[2]) for s in zip($(var_data[:,1]), break_values)],
+                    [string(s[1])*" = "*string(s[2]) for s in zip($(var_data[1,:]), break_values)],
                     nothing)
 
             if isa(result, Fail)
@@ -183,7 +184,7 @@ macro test_cases(exprs...)
             result = break_test ?
                 Pass(:test,
                     $(Expr(:quote, exprs)),
-                    [string(s[1])*" = "*string(s[2]) for s in zip($(var_data[:,1]), break_values)],
+                    [string(s[1])*" = "*string(s[2]) for s in zip($(var_data[1,:]), break_values)],
                     nothing) :
                 Fail(:test,$(Expr(:quote, exprs)), nothing, nothing)
 

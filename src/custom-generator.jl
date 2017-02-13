@@ -1,7 +1,8 @@
-function custom_generator{T<:Union{AbstractFloat,Integer}}(a::Number, b::Number, type_a::Bool, type_b::Bool,
-   var_type::Type{T}, p::Float64 = 1.5)
+function custom_generator{T<:Union{AbstractFloat,Integer}}(var_type::Type{T},
+    a::Number, b::Number, type_a::Bool, type_b::Bool,
+    p::Float64 = 1.5)
     if a > b
-        error("Generotor received lower bound that is greater then upper bound:
+        error("Generator received incorrect lower and upper bounds:
         $a > $b")
     end
 	if a == -Inf && b == Inf
