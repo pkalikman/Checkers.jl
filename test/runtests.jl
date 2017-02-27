@@ -60,7 +60,7 @@ results_2 = @testset NoThrowTestSet begin
     @test_exists maxtests=100 0 < x < 10, x < 9 --> x < 10
     @test_exists 0 < x < 10, x < 9 --> x < 10
 end
-expected_2 = [Error, Pass, Pass, Pass, Pass, Pass, Pass] 
+expected_2 = [Error, Pass, Pass, Pass, Pass, Pass, Pass]
 
 results_3 = @testset NoThrowTestSet begin
     #Workaround from @TotalVerb on Julia Gitter
