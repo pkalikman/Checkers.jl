@@ -30,8 +30,4 @@ extra_javascript:
 docs_dir: 'build'
 
 pages:
-  - Introduction: index.md
-  - Macros:
-    - test_forall: macros/test-forall.md
-    - test_formany: macros/test-formany.md
-    - test_exists: macros/test-exists.md
+  - Index: index.md
