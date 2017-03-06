@@ -1,3 +1,110 @@
+"""
+    @test_cases [ntests = 100] [maxtests = 1000] [logto = ""] [working_mode = :none] [argument_data, proposition]
+
+    Takes proposition depending on some variables, generates samples of their values
+    and tests the proposition. Prints number of samples for which the proposition evaluated to `true`.
+
+# Arguments
+
+Macro accepts a tuple of expressions that describe either statement of a test
+or specify optional keyword arguments.
+
+Statement of a test must be a sequence of comma-separated expressions, where
+all but last expressions are read as `argument_data` and last statement is
+`proposition` depending on these arguments.
+
+* `argument_data` consists of arbitrarily many expressions containing
+information about variables, their types and conditions on them. Expressions
+must have one of the following forms:
+
+  * `a<x::T<b` or `a>x::T>b`, where middle variable `x` must be a symbol;
+  `T`  must be a type; bounds `a` & `b` can be arbitrary expressions;
+  * `a<<x::T<b`, `a<x::T<<b`, `a>>x::T>b` or `a>x::T>>b`,
+  similar to the one above;
+  * `x::T`, where `T` is a julia type for which function `custom_generator(x::T...)`
+  is specified (see ~/examples/new-type-generator.jl for more details).
+  * For inequalities shorthand `x` instead of `x::T` may be used, e.g. `a<x<b`,
+  then type of variable defaults to `Float64`.
+
+* `proposition`: is the expression to be tested. Two types of propositions are allowed:
+
+  * `proposition` of form `condition-->statement`, where `condition` and
+  `statement` are boolean-valued expressions
+  * `proposition` is boolean-valued expression itself
+
+Optional keyword arguments include the following:
+
+* `ntests = 100`: number of tests that must be performed.
+
+* `maxtests = 1000`: maximal number of attempts to generate arguments
+satisfying `condition`
+
+* `logto = "path_to_file"`: if provided then parsed as a path to file,
+where log of tests will be recorded.
+
+* `working_mode = :none`: accepts one of three symbols: `:none`, :test_formany`,
+  `:test_exists`. For modes different from `:none` see documentation for `@test_formany`
+  and `@test_exists`.
+
+# Description
+
+Macro `@test_cases` provides a convenient syntax for testing a boolean-valued
+proposition multiple times against randomly generated input. Output prints number
+of cases for which the proposition was satisfied.
+
+The macro attempts to generate a sample of values for all variables identified in
+`argument_data`. Value of every variable is generated according to its type `T`
+and rules specified for this type in function `custom_generator(x::T...)`.
+Generated input is used to evaluate the statement of the test.
+
+If `proposition` is just a boolean-valued expression, code simply checks whether
+`prop` holds for generated values.
+
+If `proposition` is of form `condition-->statement` (see arguments list),
+then test checks whether implication holds. Namely, the test passes if whenever
+`condition` evaluates to `true`, then `statement` also evaluates to `true`.
+
+In the latter setting the test breaks and returns error, if the number of attempts to
+generate argument values satisfying `condition` exceeds `maxtests` parameter before
+succesfully performing `ntests` checks of `proposition`. Thus, some caution is
+required to avoid vacuous conditions. Failure to generate `ntests` values
+satisfying the `condition` in `maxtests` attempts results in error.
+
+Default for optional keyword arguments is the following: `ntests = 100, maxtests = 1000`.
+If only `ntests` parameter is specified, `maxtests = 10*ntests`. If `logto = "path_to_file"`
+is given, log of test will be written to corresponding file,for example:
+
+* `@test_cases ntests = 10 maxtests = 1000  1<x<10, proposition logto =  "./test_log.csv"`
+
+Working mode argument has default `working_mode = :none` and is designed to
+refer to @test_cases` code from other macros `@test_formany` and `@test_exists`.
+Macro calls `@test_cases working_mode = :test_formany argument_data, proposition`
+and `@test_formany argument_data, proposition` are fully equivalent.
+
+# Examples
+```julia
+# example with default genenerator that draws values from uniform distribution
+@test_cases ntests = 10000 0<x<100, x>=50
+Test passed in 5035/10000 simulations.
+
+# simulated values can be recorded, using `logto` optional field
+## theoretical expectation .5*log(2) +.5 ~ 0.847...
+@test_cases ntests = 10000 1<x<1, 0<y<1, x*y <.5 logto =  "./test_log.csv"
+Test passed in 8399/10000 simulations.
+
+#elementary example of testing cdf properties using Checkers
+type gaussian_rv
+	val::Float64
+end
+
+function Checkers.custom_generator{T<:gaussian_rv}(var_type::Type{T}, mu::Number, sigma::Number)
+	return (size) -> gaussian_rv(mu + sigma*randn())
+end
+
+@test_cases x::gaussian_rv, 0, 1, x.val<1.96 ntests = 10000
+Test passed in 9777/10000 simulations.
+```
+"""
 macro test_cases(exprs...)
     # everything is embedded in try/catch block and if it can't be compiled,
     # cathch-part returns Error type object from Base.test
@@ -11,7 +118,7 @@ macro test_cases(exprs...)
     prop = :(); cond = :()
 
     # parsing expression
-	var_data = Array(Any,1,6)
+	var_data = Array(Any, 3, 1)
     for ex in exprs
         if isa(ex, Expr) && ex.head == :tuple  # parsing statements about
             var_data = parse_argument_data(ex) # variables, condition and
@@ -53,18 +160,18 @@ macro test_cases(exprs...)
 
     # creating a block expression `generate_values` and expression values
     # that stores references to generated variable
-    num_of_vars = size(var_data,1)
+    num_of_vars = size(var_data,2)
     generate_values = Expr(:block)
     values = Expr(:vect)
     for i in 1:num_of_vars
-        next_expr = :($(esc(var_data[i,1]))=
-               custom_generator($(esc(var_data[i,2])),$(esc(var_data[i,3])),
-                  $(esc(var_data[i,4])),$(esc(var_data[i,5])),$(esc(var_data[i,6])))(div(n,2)+3))
-
+        params = Expr(:call, :custom_generator, esc(var_data[2,i]))
+        for p in var_data[3,i]
+            push!(params.args, esc(p))
+        end
+        next_expr = :($(esc(var_data[1,i]))= $params(div(n,2)+3))
         push!(generate_values.args, next_expr)
-        push!(values.args, :($(esc(var_data[i,1]))))
+        push!(values.args, :($(esc(var_data[1,i]))))
     end
-
     # defining innermost expression in the loop running tests
     inner_ex = quote
         num_good_args += 1
@@ -123,6 +230,7 @@ macro test_cases(exprs...)
 
         for n in 1:$maxtests
             $generate_values
+
             if $(esc(cond))
                 $inner_ex
             end
@@ -152,7 +260,7 @@ macro test_cases(exprs...)
         logging_expr = quote
             log_file = open($logto,"a")
             writedlm(log_file,
-                reshape([string(s) for s in $(var_data[:,1])],(1,$num_of_vars)),",")
+                reshape([string(s) for s in $(var_data[1,:])],(1,$num_of_vars)),",")
         end
 
         unshift!(output_expr.args, logging_expr)
@@ -165,7 +273,7 @@ macro test_cases(exprs...)
                  Pass(:test,$(Expr(:quote, exprs)), nothing, nothing) :
                  Fail(:test,
                     $(Expr(:quote, exprs)),
-                    [string(s[1])*" = "*string(s[2]) for s in zip($(var_data[:,1]), break_values)],
+                    [string(s[1])*" = "*string(s[2]) for s in zip($(var_data[1,:]), break_values)],
                     nothing)
 
             if isa(result, Fail)
@@ -183,7 +291,7 @@ macro test_cases(exprs...)
             result = break_test ?
                 Pass(:test,
                     $(Expr(:quote, exprs)),
-                    [string(s[1])*" = "*string(s[2]) for s in zip($(var_data[:,1]), break_values)],
+                    [string(s[1])*" = "*string(s[2]) for s in zip($(var_data[1,:]), break_values)],
                     nothing) :
                 Fail(:test,$(Expr(:quote, exprs)), nothing, nothing)
 
