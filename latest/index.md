@@ -63,7 +63,7 @@ Error During Test
 ```
 
 
-<a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/6ed7fd7b2816358f8661e5cecc709dca10d59472/src/./test-forall.jl#L1-L44' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/d1f4793bba5344e2836500683672f9c924d1a05a/src/./test-forall.jl#L1-L44' class='documenter-source'>source</a><br>
 
 <a id='Checkers.@test_formany' href='#Checkers.@test_formany'>#</a>
 **`Checkers.@test_formany`** &mdash; *Macro*.
@@ -205,7 +205,7 @@ Error During Test
 ```
 
 
-<a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/6ed7fd7b2816358f8661e5cecc709dca10d59472/src/./test-formany.jl#L1-L142' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/d1f4793bba5344e2836500683672f9c924d1a05a/src/./test-formany.jl#L1-L142' class='documenter-source'>source</a><br>
 
 <a id='Checkers.@test_exists' href='#Checkers.@test_exists'>#</a>
 **`Checkers.@test_exists`** &mdash; *Macro*.
@@ -251,7 +251,7 @@ Error During Test
 ```
 
 
-<a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/6ed7fd7b2816358f8661e5cecc709dca10d59472/src/./test-exists.jl#L1-L40' class='documenter-source'>source</a><br>
+<a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/d1f4793bba5344e2836500683672f9c924d1a05a/src/./test-exists.jl#L1-L40' class='documenter-source'>source</a><br>
 
 
 <a id='Index-1'></a>
