@@ -26,18 +26,7 @@ end
 	@test_formany 1 < x::ExampleType < 10, x.field1 == 1
 end
 
-# elementary example of testing cdf properties using Checkers
-type gaussian_rv
-	val::Float64
-end
-
-function Checkers.custom_generator{T<:gaussian_rv}(var_type::Type{T}, mu::Number, sigma::Number)
-	return (size) -> gaussian_rv(mu + sigma*randn())
-end
-
-@test_cases x::gaussian_rv, 0, 1, x.val<1.96 ntests = 10000
-
-# elementary example with more complex types
+# elementary example with complex types
 type multifield
 	field1::Float64
 	field2::Float64
