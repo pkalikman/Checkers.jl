@@ -1,14 +1,14 @@
 #Checkers.jl Documentation 
 
-```@contents
-```
-
 ## Testing Macros
 
-```@docs
-Checkers.@test_forall
-Checkers.@test_formany
-Checkers.@test_exists
+```@contents
+Pages = [
+    "macros/test-forall.md"
+    "macros/test-formany.md"
+    "macros/test-forexists.md"
+    ]
+Depth = 2
 ```
 
 ## Index
