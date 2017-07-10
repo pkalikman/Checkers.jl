@@ -2,7 +2,8 @@ site_name:           Checkers.jl
 repo_url:            https://github.com/pkalikman/Checkers.jl
 site_description:    QuickCheck-like Automated Testing Macros for Julia
 site_author:         pkalikman
-theme:               readthedocs
+
+theme: readthedocs
 
 extra:
   palette:
