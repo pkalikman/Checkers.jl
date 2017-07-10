@@ -1,5 +1,9 @@
 #Checkers.jl Documentation 
 
+```@meta
+CurrentModule = Checkers
+```
+
 ## Testing Macros
 
 ```@contents
@@ -15,4 +19,6 @@ Depth = 2
 
 ```@index
 ```
+
+
 
