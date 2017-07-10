@@ -1,4 +1,4 @@
-# Checkers.jl 🏁 🏁
+# Checkers 🏁 🏁
 
 [![Build Status](https://travis-ci.org/pkalikman/Checkers.jl.svg?branch=master)](https://travis-ci.org/pkalikman/Checkers.jl)
 [![codecov](https://codecov.io/gh/pkalikman/Checkers.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/pkalikman/Checkers.jl)
@@ -13,7 +13,26 @@ inspired by a [Julia implementation](https://github.com/pao/QuickCheck.jl)
 of Koen Claessen and John Hughes' [QuickCheck](http://www.cse.chalmers.se/~rjmh/QuickCheck/)
 property-based randomized tester.
 
-## Test Generating Macros
+Checkers lets you write quick property-based tests:
+
+    julia> using Checkers
+    julia> f(x) = x^2
+    julia> @test_formany -10<x<10, f(x) >= 0
+    Test Passed
+      Expression: (:((-10 < x < 10, f(x) >= 0)), :(mode = test_formany))
+
+    julia> @test_forall x in -10:10, f(x) >=0
+    Test Passed
+      Expression: (x in -10:10, f(x) >= 0)
+        @test_forall x in 0:10, f(x) >= 0
+
+    julia> @test_forall x in -10:10, f(x) > 0 #Should fail b/c f(0) = 0
+    Test Failed
+      Expression: (x in -10:10, f(x) > 0)
+    ERROR: There was an error during testing
+
+
+## Quickstart Guide
 
 This package provides three macros for test generation:
 
@@ -21,15 +40,56 @@ This package provides three macros for test generation:
 2. `@test_formany`
 3. `@test_exists`
 
+In each case, the basic format is
+
+    @[test] [set of values to test] [property to test]
+
+The *property* is any expression that evaluates to a boolean,
+making reference to some dummy variable specified in the set of values
+to test.
+
+The macros differ in how they specify and choose values to test:
+
+- Use `@test_forall` when you can specify the exact *finite set* of values to 
+  test. 
+  For example, `-3:3` specifies the exact set of 7 Int64 values,
+  {-3,-2,-1,0,1,2,3}, on which you wish to test the property.
+  Because the user specifies the test universe completely,
+  and that universe is finite,
+  every value is tested and @test_forall returns only true positives
+  and true negatives.
+
+- Use `@test_formany` when you wish to specify a (possibly infinite) set of values 
+  to test by restricted comprehension from some universe. 
+  For example, `-3 < x::Float64 < 3` specifies that some number of `Float64`s `x`,
+  satisfying the condition `-3 < x < 3`, will be tested for the property.
+  Note that `@test_formany` is meant to capture the idea of the universal 
+  quantifier, but is not universal on infinite sets, 
+  since the package will only run a finite number of tests.
+  That is, `@test_formany` may return a false positive, as it cannot
+  be comprehensive. It will not, however, return a false negative.
+
+- Use `@test_exists` like `@test_formany`, but when you wish the test to pass when 
+  at least one value satisfies the property, rather than when all tested
+  values satisfy the property.
+  Like `@test_formany`, `@test_exists` *simulates* the existential quantifier,
+  but is not strictly speaking complete. 
+  That is, `@test_exists` may return a false negative, in the case that
+  a value exists but was not lucky enough to be tested.
+  It will not, however, return a false positive.
+
+## The Macros in More Detail
+
 `@test_forall` takes an expression specifying one or more dummy variables,
 discrete sets of values for those variables, and an expression, and tests the
 expression substituting every combination of the variables 
-(the Cartesian product of their possible value sets). (In the latest Julia,
+(the Cartesian product of their possible value sets). 
+(Since Julia 0.5,
 `@test_forall x in [Collection], P(x)` is quite similar to 
 `@test for x in [Collection] P(x) end`,
 and we may deprecate / remove it for that reason.)
 
-The expression may be a conditional expression such as `P(x) --> Q(x)`,
+The property may be a conditional expression such as `P(x) --> Q(x)`,
 in which case truth may be vacuous when `P(x)` is false `\forall x` tested.
 
 `@test_formany` functions like `@test_forall`, but allows quantifying over
@@ -110,7 +170,7 @@ Our goal is to provide a lightweight, ready-to-use out-of-the-box alternative:
 
 The Checkers.jl package is licensed under the MIT "Expat" License:
 
-Copyright (c) 2016: Efim Abrikosov & Philip Kalikman.
+Copyright (c) 2017: Efim Abrikosov & Philip Kalikman.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
