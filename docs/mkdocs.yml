@@ -8,9 +8,6 @@ extra:
   palette:
     primary: 'deep purple'
     accent: 'cyan'
-  social:
-    - type: 'github'
-      link: 'https://github.com/Datseris/DynamicalBilliards.jl'
 
 markdown_extensions:
   - admonition
@@ -30,4 +27,9 @@ extra_javascript:
 docs_dir: 'build'
 
 pages:
-  - Index: index.md
+  - Home: 'index.md'
+  - Introduction: 'man/introduction.md'
+  - Macros:
+      - Test-forall: 'macros/test-forall.md'
+      - Test-formany: 'macros/test-formany.md'
+      - Test-exists: 'macros/test-exists.md'
