@@ -120,15 +120,15 @@ Basic usage:
     
 Control how many tests in `@test_formany`:
 
-    @test_formany ntests = 10_000 1 < x < 5, x^2 < 30
+    @test_formany ntests = 10_000  1 < x < 5, x^2 < 30
     
 Test a conditional property, passing only if 100 of the tests are not vacuous:
 
-    @test_formany ntests = 100                    0 < x < Inf, 0 < y < Inf,  x < y --> log(x)<log(y)
+    @test_formany ntests = 100  0 < x < Inf, 0 < y < Inf,  x < y --> log(x)<log(y)
   
 Test a conditional property, passing only if 100 of the tests are not vacuous, but only allow 100 tests:
 
-    @test_formany ntests = 100 maxtests = 100     0 < x < 10,  0 < y < 10,  x < y --> x^2 < y^2
+    @test_formany ntests = 100 maxtests = 100  0 < x < 10,  0 < y < 10,  x < y --> x^2 < y^2
     
 Test a conditional property, passing only if 100 of the test are not vacuous, but allow 100,000 tests:
 
