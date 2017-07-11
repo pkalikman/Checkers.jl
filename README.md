@@ -21,7 +21,7 @@ Checkers lets you write quick property-based tests:
     Test Passed
       Expression: (:((-10 < x < 10, f(x) >= 0)), :(mode = test_formany))
 
-    julia> @test_forall x in -10:10, f(x) >=0
+    julia> @test_forall x in -10:10, f(x) >= 0
     Test Passed
       Expression: (x in -10:10, f(x) >= 0)
         @test_forall x in 0:10, f(x) >= 0
