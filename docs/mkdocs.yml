@@ -29,7 +29,6 @@ docs_dir: 'build'
 
 pages:
   - Home: 'index.md'
-  - Introduction: 'man/introduction.md'
   - Macros:
       - Test-forall: 'macros/test-forall.md'
       - Test-formany: 'macros/test-formany.md'
