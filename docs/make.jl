@@ -12,7 +12,7 @@ makedocs(modules  = [Checkers],
          #               "Macros" => Any["macros/test-forall.md",
          #                               "macros/test-formany.md",
          #                               "macros/test-exists.md"]
-                    ]
+         #           ]
 )
 
 deploydocs(deps   = Deps.pip("mkdocs", "mkdocs-material" ,"python-markdown-math", "pygments"),
