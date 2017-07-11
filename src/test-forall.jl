@@ -12,7 +12,7 @@ Code constructs a sequence of for-loops and checks that proposition evaluates to
 
 Loops are generated from `argument_data` inductively: from outer-loop to inner-loop. If range of a variable depends on other variables, then their ranges must be defined in `argument_data` earlier.
 
-#Examples
+# Examples
 ```julia
 julia> @test_forall x in -1:1, x*(x-1)*(x+1) == 0
 Test Passed
