@@ -120,15 +120,19 @@
 </pre></div>
 
 
-<p>Check statement of proposition over all tuples of values of variables, specified in <code>argument_data</code>. Generate Pass/Fail/Error output for Base.Test. </p>
+<p>Checks <code>prop</code> on each tuples of values specified in <code>argument_data</code>.  Returns <code>Pass</code> if <code>prop</code> holds for all values tested, <code>Fail</code> if <code>prop</code> does not hold for some tested value,  and <code>Error</code> if a part of code could not be evaluated.</p>
 <p><strong>Arguments</strong></p>
 <ul>
-<li><code>argument_data</code>: comma separated expression with arbitrarily many statements, containing information about ranges of variables. Statements must have form <code>x in iter</code>, where <code>x</code> is symbol and <code>iter</code> is any expression valid in <code>"for x in iter"</code> syntax used in construction of for-loops. In particular, <code>iter</code> can be <code>a:b</code>, where <code>a</code> &amp; <code>b</code> are integer-valued expressions; or array/tuple-valued expression.</li>
-<li><code>prop</code> is boolean-valued expression for proposition to be checked for arguments in specified ranges (see Examples below).</li>
+<li><code>argument_data</code>:</li>
 </ul>
+<p>a sequence of at least one comma-separated expression(s), specifying the sets of values for individual variables. Expressions must have the form <code>x in iter</code>, where <code>x</code> is any symbol that will be treated as a dummy variable, and <code>iter</code> is any iterable expression, i.e. one  valid in constructing a for loop: <code>"for x in iter"</code>. In particular, <code>iter</code> can be <code>a:b</code>,  where <code>a</code> &amp; <code>b</code> are integer-valued expressions; an array; or a set.</p>
+<ul>
+<li><code>prop</code> is boolean-valued expression of the proposition to be checked for</li>
+</ul>
+<p>arguments in specified ranges, with reference to the dummy variables named in <code>argument_data</code></p>
 <p><strong>Details</strong></p>
-<p>Code constructs a sequence of for-loops and checks that proposition evaluates to <code>true</code> for all values of variables specified. Equivalently, test is performed over cartesian product of ranges of variables.</p>
-<p>Loops are generated from <code>argument_data</code> inductively: from outer-loop to inner-loop. If range of a variable depends on other variables, then their ranges must be defined in <code>argument_data</code> earlier.</p>
+<p><code>@test_forall</code> constructs a nested sequence of for-loops, and checks that <code>prop</code> evaluates to <code>true</code>  for all combinations of values of variables specified by the loops.  In set-theoretic terms, <code>@test_forall</code> tests  <code>prop</code> on the Cartesian product of the sets of variables specified in <code>argument_data</code>.</p>
+<p>Loops are generated from <code>argument_data</code> inductively,  starting with the outermost loop as the leftmost expression, to the innermost loop as the rightmost.  Variable ranges may depend on the values of previously referenced variables (see third example).</p>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_forall</span> <span class="n">x</span> <span class="kp">in</span> <span class="o">-</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 <span class="n">Test</span> <span class="n">Passed</span>
@@ -150,7 +154,8 @@
 <span class="n">Test</span> <span class="n">Passed</span>
   <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="n">x</span> <span class="kp">in</span> <span class="p">[</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="s">&quot;b&quot;</span><span class="p">],</span><span class="n">y</span> <span class="kp">in</span> <span class="p">[</span><span class="s">&quot;z&quot;</span><span class="p">,</span><span class="s">&quot;w&quot;</span><span class="p">],</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="kp">in</span> <span class="kt">Set</span><span class="p">([</span><span class="s">&quot;az&quot;</span><span class="p">,</span><span class="s">&quot;aw&quot;</span><span class="p">,</span><span class="s">&quot;bz&quot;</span><span class="p">,</span><span class="s">&quot;bw&quot;</span><span class="p">]))</span>
 
-<span class="c"># Bad design: throws UndefVarError: x not defined, because outer loop for y variable refers to the value of x coming after.</span>
+<span class="c"># Bad design: throws UndefVarError: x not defined</span>
+<span class="c"># The outer loop for `y` refers to `x`, which comes later in `argument_data`.</span>
 <span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_forall</span> <span class="n">y</span> <span class="kp">in</span> <span class="n">x</span><span class="o">:</span><span class="mi">4</span><span class="p">,</span><span class="n">x</span> <span class="kp">in</span> <span class="mi">0</span><span class="o">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">y</span><span class="o">+</span><span class="mi">4</span><span class="o">&gt;</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">==</span><span class="kc">true</span>
 <span class="n">Error</span> <span class="n">During</span> <span class="n">Test</span>
   <span class="n">Test</span> <span class="n">threw</span> <span class="n">an</span> <span class="n">exception</span> <span class="n">of</span> <span class="k">type</span> <span class="kt">UndefVarError</span>
@@ -159,7 +164,7 @@
 </pre></div>
 
 
-<p><a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/907003dfc2bf0629392f653e7a15cc769e609adb/src/./test-forall.jl#L1-L44' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/fa7cf66c1ef570a85b57ce476fb751a8fce3bbac/src/./test-forall.jl#L1-L69' class='documenter-source'>source</a><br></p>
               
             </div>
           </div>
