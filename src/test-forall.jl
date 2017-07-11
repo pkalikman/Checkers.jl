@@ -1,16 +1,40 @@
 """
     @test_forall argument_data, prop
 
-Check statement of proposition over all tuples of values of variables, specified in `argument_data`. Generate Pass/Fail/Error output for Base.Test. 
+Checks `prop` on each tuples of values specified in `argument_data`. 
+Returns `Pass` if `prop` holds for all values tested,
+`Fail` if `prop` does not hold for some tested value, 
+and `Error` if a part of code could not be evaluated.
 
 # Arguments
-* `argument_data`: comma separated expression with arbitrarily many statements, containing information about ranges of variables. Statements must have form `x in iter`, where `x` is symbol and `iter` is any expression valid in `"for x in iter"` syntax used in construction of for-loops. In particular, `iter` can be `a:b`, where `a` & `b` are integer-valued expressions; or array/tuple-valued expression.
-* `prop` is boolean-valued expression for proposition to be checked for arguments in specified ranges (see Examples below).
+
+* `argument_data`: 
+a sequence of at least one comma-separated expression(s),
+specifying the sets of values for individual variables.
+Expressions must have the form `x in iter`,
+where `x` is any symbol that will be treated as a dummy variable,
+and `iter` is any iterable expression, i.e. one 
+valid in constructing a for loop: `"for x in iter"`.
+In particular, `iter` can be `a:b`, 
+where `a` & `b` are integer-valued expressions; an array; or a set.
+
+* `prop` is boolean-valued expression of the proposition to be checked for
+arguments in specified ranges, with reference to the dummy variables named in
+`argument_data`
 
 # Details
-Code constructs a sequence of for-loops and checks that proposition evaluates to `true` for all values of variables specified. Equivalently, test is performed over cartesian product of ranges of variables.
+`@test_forall` constructs a nested sequence of for-loops,
+and checks that `prop` evaluates to `true` 
+for all combinations of values of variables specified by the loops. 
+In set-theoretic terms, `@test_forall` tests 
+`prop` on the Cartesian product of the sets of variables
+specified in `argument_data`.
 
-Loops are generated from `argument_data` inductively: from outer-loop to inner-loop. If range of a variable depends on other variables, then their ranges must be defined in `argument_data` earlier.
+Loops are generated from `argument_data` inductively, 
+starting with the outermost loop as the leftmost expression,
+to the innermost loop as the rightmost. 
+Variable ranges may depend on the values of previously referenced
+variables (see third example).
 
 # Examples
 ```julia
@@ -34,7 +58,8 @@ julia> @test_forall x in ["a","b"], y in ["z","w"], x*y in Set(["az","aw","bz","
 Test Passed
   Expression: (x in ["a","b"],y in ["z","w"],x * y in Set(["az","aw","bz","bw"]))
 
-# Bad design: throws UndefVarError: x not defined, because outer loop for y variable refers to the value of x coming after.
+# Bad design: throws UndefVarError: x not defined
+# The outer loop for `y` refers to `x`, which comes later in `argument_data`.
 julia> @test_forall y in x:4,x in 0:2, (y+4>2*x)==true
 Error During Test
   Test threw an exception of type UndefVarError
