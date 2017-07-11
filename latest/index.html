@@ -71,6 +71,8 @@
         
             <li><a class="toctree-l3" href="#credits">Credits</a></li>
         
+            <li><a class="toctree-l3" href="#index">Index</a></li>
+        
         </ul>
     
 
@@ -144,6 +146,7 @@
 <li><a href=".#See-Also-1">See Also</a></li>
 <li><a href=".#License-1">License</a></li>
 <li><a href=".#Credits-1">Credits</a></li>
+<li><a href=".#Index-1">Index</a></li>
 </ul>
 </li>
 </ul>
@@ -157,7 +160,7 @@ julia&gt; @test_formany -10&lt;x&lt;10, f(x) &gt;= 0
 Test Passed
   Expression: (:((-10 &lt; x &lt; 10, f(x) &gt;= 0)), :(mode = test_formany))
 
-julia&gt; @test_forall x in -10:10, f(x) &gt;=0
+julia&gt; @test_forall x in -10:10, f(x) &gt;= 0
 Test Passed
   Expression: (x in -10:10, f(x) &gt;= 0)
     @test_forall x in 0:10, f(x) &gt;= 0
@@ -263,15 +266,18 @@ end
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 <p><a id='Credits-1'></a></p>
 <h2 id="credits">Credits</h2>
-<p>This package was co-designed and co-written by  <a href="https://github.com/flomastruk">Efim Abrikosov</a> and <a href="https://github.com/pkalikman/">Philip Kalikman</a> while each was a graduate student at Yale University.</p>
+<p>This package was co-designed and co-written by  <a href="https://github.com/flomastruk">Efim Abrikosov</a> and  <a href="https://github.com/pkalikman/">Philip Kalikman</a> while each was a graduate student at Yale University.</p>
 <ul>
-<li>Efim wrote the majority of the code,</li>
+<li>Efim wrote the majority of the code, which is based on but does not directly use <a href="https://github.com/pao/QuickCheck.jl">the work of Patrick O'Leary</a></li>
+<li>Philip designed the majority of the functionality and syntax, building on <a href="http://www.cs.tufts.edu/~nr/cs257/archive/john-hughes/quick.pdf">the work (in Haskell) of Koen Classen and John Hughes</a></li>
 </ul>
-<p>which is based on but does not directly use <a href="https://github.com/pao/QuickCheck.jl">the work of Patrick O'Leary</a></p>
+<p><a id='Index-1'></a></p>
+<h2 id="index">Index</h2>
 <ul>
-<li>Philip designed the majority of the functionality and syntax,</li>
+<li><a href="macros/test-exists/#Checkers.@test_exists"><code>Checkers.@test_exists</code></a></li>
+<li><a href="macros/test-forall/#Checkers.@test_forall"><code>Checkers.@test_forall</code></a></li>
+<li><a href="macros/test-formany/#Checkers.@test_formany"><code>Checkers.@test_formany</code></a></li>
 </ul>
-<p>building on <a href="http://www.cs.tufts.edu/~nr/cs257/archive/john-hughes/quick.pdf">the work (in Haskell) of Koen Classen and John Hughes</a></p>
               
             </div>
           </div>
@@ -322,5 +328,5 @@ end
 
 <!--
 MkDocs version : 0.16.3
-Build Date UTC : 2017-07-11 15:53:01
+Build Date UTC : 2017-07-11 16:11:28
 -->

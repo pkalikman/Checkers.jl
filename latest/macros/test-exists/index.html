@@ -114,7 +114,20 @@
           <div role="main">
             <div class="section">
               
-                <p><a id='Checkers.@test_exists' href='#Checkers.@test_exists'>#</a>
+                <ul>
+<li><a href="../..#Checkers-Documentation-1">Checkers 🏁 🏁 Documentation</a><ul>
+<li><a href="../..#Contents-1">Contents</a></li>
+<li><a href="../..#Introduction-1">Introduction</a></li>
+<li><a href="../..#Quickstart-Guide-1">Quickstart Guide</a></li>
+<li><a href="../..#The-Macros-in-More-Detail-1">The Macros in More Detail</a></li>
+<li><a href="../..#See-Also-1">See Also</a></li>
+<li><a href="../..#License-1">License</a></li>
+<li><a href="../..#Credits-1">Credits</a></li>
+<li><a href="../..#Index-1">Index</a></li>
+</ul>
+</li>
+</ul>
+<p><a id='Checkers.@test_exists' href='#Checkers.@test_exists'>#</a>
 <strong><code>Checkers.@test_exists</code></strong> &mdash; <em>Macro</em>.</p>
 <div class="codehilite"><pre><span></span>@test_exists [ntests = 100] [maxtests = 1000] [logto = &quot;&quot;] argument_data, prop
 </pre></div>
@@ -122,7 +135,12 @@
 
 <p>Checks <code>prop</code> on randomly generated samples values specified in <code>argument_data</code>.  Returns <code>Pass</code> if <code>prop</code> holds for at least one value in the sample,  <code>Fail</code> if <code>prop</code> fails to hold for all sampled values,  and <code>Error</code> if a part of the code could not be evaluated or if insufficient non-vacuous tests are generated.</p>
 <p><strong>Description</strong></p>
-<p><code>@test_exists</code> is to <code>@test_formany</code> as the existential quantifier is to the universal quantifier. That is, <code>@test_exists x ∈ X, P(x)</code> is equivalent to <code>! (@test_formany x ∈ X, !P(x)</code>.   Consequently, the same concerns with vacuity avoidance apply. Additionally, analogous concerns with false positivity  apply: where <code>@test_formany</code> may falsely validate a property by not exhausting its implicit test universe, <code>@test_exists</code> may falsely <em>in</em>validate a property by not exhausting its implicit search universe.</p>
+<p><code>@test_exists</code> is to <code>@test_formany</code> as the existential quantifier is to the universal quantifier. That is, </p>
+<div class="codehilite"><pre><span></span>( @test_exists x ∈ X, P(x)  ) == !( @test_formany x ∈ X, !P(x) )
+</pre></div>
+
+
+<p>Consequently, the same concerns with vacuity avoidance apply. Additionally, analogous concerns with false positivity  apply: where <code>@test_formany</code> may falsely validate a property by not exhausting its implicit test universe, <code>@test_exists</code> may falsely <em>in</em>validate a property by not exhausting its implicit search universe.</p>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_exists</span> <span class="n">ntests</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">-</span><span class="mi">10</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span> <span class="n">x</span><span class="o">^</span><span class="mi">2</span> <span class="o">&gt;</span> <span class="mi">99</span>
 <span class="n">String</span><span class="p">[</span><span class="s">&quot;x = -9.966560160994264&quot;</span><span class="p">]</span>
@@ -156,7 +174,7 @@
 </pre></div>
 
 
-<p><a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/fa7cf66c1ef570a85b57ce476fb751a8fce3bbac/src/./test-exists.jl#L1-L55' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/4347fbdea0cf2e1c111000f1180d35d96f5326c8/src/./test-exists.jl#L1-L59' class='documenter-source'>source</a><br></p>
               
             </div>
           </div>
