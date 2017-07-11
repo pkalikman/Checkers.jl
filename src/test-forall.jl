@@ -8,21 +8,21 @@ and `Error` if a part of code could not be evaluated.
 
 # Arguments
 
-* `argument_data`: 
-a sequence of at least one comma-separated expression(s),
-specifying the sets of values for individual variables.
-Expressions must have the form `x in iter`,
-where `x` is any symbol that will be treated as a dummy variable,
-and `iter` is any iterable expression, i.e. one 
-valid in constructing a for loop: `"for x in iter"`.
-In particular, `iter` can be `a:b`, 
-where `a` & `b` are integer-valued expressions; an array; or a set.
+* `argument_data`: a sequence of at least one comma-separated expression(s),
+  specifying the sets of values for individual variables.  
+  Expressions must have the form `x in iter`, 
+  where `x` is any symbol that will be treated as a dummy variable, 
+  and `iter` is any iterable expression, 
+  i.e. one valid in constructing a for loop: `"for x in iter"`.
+  In particular, `iter` can be `a:b`, 
+  where `a` & `b` are integer-valued expressions; an array; or a set.
 
 * `prop` is boolean-valued expression of the proposition to be checked for
-arguments in specified ranges, with reference to the dummy variables named in
-`argument_data`
+  arguments in specified ranges, 
+  with reference to the dummy variables named in `argument_data`.
 
 # Details
+
 `@test_forall` constructs a nested sequence of for-loops,
 and checks that `prop` evaluates to `true` 
 for all combinations of values of variables specified by the loops. 
@@ -37,6 +37,7 @@ Variable ranges may depend on the values of previously referenced
 variables (see third example).
 
 # Examples
+
 ```julia
 julia> @test_forall x in -1:1, x*(x-1)*(x+1) == 0
 Test Passed
@@ -46,11 +47,11 @@ julia> @test_forall x in -1:1, x*(x-2)*(x+1) == 0
 Test Failed
   Expression: (x in -1:1,x * (x - 2) * (x + 1) == 0)
 
-julia> @test_forall x in [0,1,2], y in x:4, (y+4>2*x)==true
+julia> @test_forall x in [0,1,2], y in x:4, y+4 > 2*x 
 Test Passed
   Expression: (x in [0,1,2],y in x:4,(y + 4 > 2x) == true)
 
-julia> @test_forall x in (1-1,0+1,sqrt(4)), y in x:4, (y+4>2*x)==true
+julia> @test_forall x in (1-1, 0+1, sqrt(4)), y in x:4, y+4 > 2*x
 Test Passed
   Expression: (x in (1 - 1,0 + 1,sqrt(4)),y in x:4,(y + 4 > 2x) == true)
 
@@ -60,7 +61,7 @@ Test Passed
 
 # Bad design: throws UndefVarError: x not defined
 # The outer loop for `y` refers to `x`, which comes later in `argument_data`.
-julia> @test_forall y in x:4,x in 0:2, (y+4>2*x)==true
+julia> @test_forall y in x:4, x in 0:2, y+4 > 2*x
 Error During Test
   Test threw an exception of type UndefVarError
   Expression: (y in x:4,x in 0:2,(y + 4 > 2x) == true)

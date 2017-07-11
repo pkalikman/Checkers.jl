@@ -10,34 +10,34 @@ or if insufficient non-vacuous tests are generated.
 # Arguments
 
 * `argument_data`:
-a sequence of comma-separated expressions, 
-where each expression specifies
-a dummy variable, a universe from which to sample it,
-and a restricted comprehension of that universe.
-In particular, expressions must have one of the following forms:
+  a sequence of comma-separated expressions, 
+  where each expression specifies
+  a dummy variable, a universe from which to sample it,
+  and a restricted comprehension of that universe.
+  In particular, expressions must have one of the following forms:
 
   * `a<x::T<b` or `a>x::T>b`, where `x` is any symbol, treated as a dummy
-  variable; `T` is a type; `a` & `b` are arbitrary expressions to constrain
-  the range of values for `x` (provided that `a<x::T<b` is meaningful
-  given `T` and the types of `a` and `b`);
+    variable; `T` is a type; `a` & `b` are arbitrary expressions to constrain
+    the range of values for `x` (provided that `a<x::T<b` is meaningful
+    given `T` and the types of `a` and `b`);
   * `a<<x::T<b`, `a<x::T<<b`, `a>>x::T>b` or `a>x::T>>b`,
-  as above, but where using `<<` will instruct `@test_formany`
-  to generate test cases *away* from that boundary, i.e. closer 
-  to the other boundary;
+    as above, but where using `<<` will instruct `@test_formany`
+    to generate test cases *away* from that boundary, i.e. closer 
+    to the other boundary;
   * `a<x<b` etc., where the type `T` is omitted,
-  and therefore defaults to `Float64`
+    and therefore defaults to `Float64`
 
 * `prop`: the property to be tested. Two types of properties are allowed:
 
   * any boolean-valued expression, referencing the dummy variables defined
-  in `argument_data`, or
+    in `argument_data`, or
   * a property of the form `antecedent --> consequent`, 
-  where `antecedent` and `consequent` are themselves
-  boolean-valued expressions that may reference dummy variables
-  defined in `argument_data`. This form is useful for 
-  expressing "if-then" relationships without thinking through 
-  how to generate test cases that satisfy the antecedent,
-  as `@test_formany` will do this for you; see below for more detail.
+    where `antecedent` and `consequent` are themselves
+    boolean-valued expressions that may reference dummy variables
+    defined in `argument_data`. This form is useful for 
+    expressing "if-then" relationships without thinking through 
+    how to generate test cases that satisfy the antecedent,
+    as `@test_formany` will do this for you; see below for more detail.
 
 Optional keyword arguments include the following:
 
@@ -54,7 +54,7 @@ Since `@test_formany` is pseudo-random and might pass a test that you
 expect to fail (or vice versa), this can be useful
 for debugging to see which actual test cases were tested.
 
-# Description
+# Details
 
 `@test_formany` generates a sample of test cases based on `argument_data`, 
 and tests `prop` on these values, returning `Pass` only if every test passes.
@@ -136,8 +136,9 @@ On the other hand, a counter-example may still
 exists even when `@test_formany` returns `Pass`
 on a conditional property after testing many non-vacuous antecedents.
 
-## Examples
+# Examples
 
+```julia
 julia> @test_formany 100 > x::Float64 > 10, x+10 < y::Float64 << 1000, y-5 < z::Float64 < Inf, z > x+5
 Test Passed
   Expression: (:((100 > x::Float64 > 10,x + 10 < y::Float64 << 1000,y - 5 < z::Float64 < Inf,z > x + 5)),)

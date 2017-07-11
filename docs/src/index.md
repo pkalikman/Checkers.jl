@@ -24,7 +24,7 @@ Checkers lets you write quick property-based tests:
     Test Passed
       Expression: (:((-10 < x < 10, f(x) >= 0)), :(mode = test_formany))
 
-    julia> @test_forall x in -10:10, f(x) >=0
+    julia> @test_forall x in -10:10, f(x) >= 0
     Test Passed
       Expression: (x in -10:10, f(x) >= 0)
         @test_forall x in 0:10, f(x) >= 0
@@ -184,15 +184,20 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ## Credits
 
 This package was co-designed and co-written by 
-[Efim Abrikosov](https://github.com/flomastruk) and [Philip Kalikman](https://github.com/pkalikman/)
+[Efim Abrikosov](https://github.com/flomastruk) and 
+[Philip Kalikman](https://github.com/pkalikman/)
 while each was a graduate student at Yale University.
 
 - Efim wrote the majority of the code,
-which is based on but does not directly use [the work of Patrick O'Leary](https://github.com/pao/QuickCheck.jl)
+  which is based on but does not directly use [the work of Patrick
+  O'Leary](https://github.com/pao/QuickCheck.jl)
 
 - Philip designed the majority of the functionality and syntax,
-building on [the work (in Haskell) of Koen Classen and John Hughes](http://www.cs.tufts.edu/~nr/cs257/archive/john-hughes/quick.pdf)
+  building on [the work (in Haskell) of Koen Classen and John
+  Hughes](http://www.cs.tufts.edu/~nr/cs257/archive/john-hughes/quick.pdf)
 
 
+## Index
 
-
+```@index
+```

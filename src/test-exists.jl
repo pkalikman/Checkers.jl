@@ -12,7 +12,10 @@ or if insufficient non-vacuous tests are generated.
 
 `@test_exists` is to `@test_formany` as the existential quantifier
 is to the universal quantifier.
-That is, `@test_exists x ∈ X, P(x)` is equivalent to `! (@test_formany x ∈ X, !P(x)`.  
+That is, 
+
+    ( @test_exists x ∈ X, P(x)  ) == !( @test_formany x ∈ X, !P(x) )   
+
 Consequently, the same concerns with vacuity avoidance apply.
 Additionally, analogous concerns with false positivity 
 apply: where `@test_formany` may falsely validate a property
@@ -21,6 +24,7 @@ by not exhausting its implicit test universe,
 by not exhausting its implicit search universe.
 
 # Examples
+
 ```julia
 julia> @test_exists ntests = 1000 -10 < x < 10, x^2 > 99
 String["x = -9.966560160994264"]
