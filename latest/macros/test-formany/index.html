@@ -114,20 +114,7 @@
           <div role="main">
             <div class="section">
               
-                <ul>
-<li><a href="../..#Checkers-Documentation-1">Checkers 🏁 🏁 Documentation</a><ul>
-<li><a href="../..#Contents-1">Contents</a></li>
-<li><a href="../..#Introduction-1">Introduction</a></li>
-<li><a href="../..#Quickstart-Guide-1">Quickstart Guide</a></li>
-<li><a href="../..#The-Macros-in-More-Detail-1">The Macros in More Detail</a></li>
-<li><a href="../..#See-Also-1">See Also</a></li>
-<li><a href="../..#License-1">License</a></li>
-<li><a href="../..#Credits-1">Credits</a></li>
-<li><a href="../..#Index-1">Index</a></li>
-</ul>
-</li>
-</ul>
-<p><a id='Checkers.@test_formany' href='#Checkers.@test_formany'>#</a>
+                <p><a id='Checkers.@test_formany' href='#Checkers.@test_formany'>#</a>
 <strong><code>Checkers.@test_formany</code></strong> &mdash; <em>Macro</em>.</p>
 <div class="codehilite"><pre><span></span>@test_formany [ntests = 100] [maxtests = 1000] [logto = &quot;&quot;] argument_data, prop
 </pre></div>
@@ -142,12 +129,12 @@
 <li><code>a&lt;x::T&lt;b</code> or <code>a&gt;x::T&gt;b</code>, where <code>x</code> is any symbol, treated as a dummy variable; <code>T</code> is a type; <code>a</code> &amp; <code>b</code> are arbitrary expressions to constrain the range of values for <code>x</code> (provided that <code>a&lt;x::T&lt;b</code> is meaningful given <code>T</code> and the types of <code>a</code> and <code>b</code>);</li>
 <li><code>a&lt;&lt;x::T&lt;b</code>, <code>a&lt;x::T&lt;&lt;b</code>, <code>a&gt;&gt;x::T&gt;b</code> or <code>a&gt;x::T&gt;&gt;b</code>, as above, but where using <code>&lt;&lt;</code> will instruct <code>@test_formany</code> to generate test cases <em>away</em> from that boundary, i.e. closer  to the other boundary;</li>
 <li><code>a&lt;x&lt;b</code> etc., where the type <code>T</code> is omitted, and therefore defaults to <code>Float64</code></li>
+</ul>
+</li>
 <li>
 <p><code>prop</code>: the property to be tested. Two types of properties are allowed:</p>
-</li>
-<li>
-<p>any boolean-valued expression, referencing the dummy variables defined in <code>argument_data</code>, or</p>
-</li>
+<ul>
+<li>any boolean-valued expression, referencing the dummy variables defined in <code>argument_data</code>, or</li>
 <li>a property of the form <code>antecedent --&gt; consequent</code>,  where <code>antecedent</code> and <code>consequent</code> are themselves boolean-valued expressions that may reference dummy variables defined in <code>argument_data</code>. This form is useful for  expressing "if-then" relationships without thinking through  how to generate test cases that satisfy the antecedent, as <code>@test_formany</code> will do this for you; see below for more detail.</li>
 </ul>
 </li>
@@ -269,7 +256,7 @@
 </pre></div>
 
 
-<p><a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/4347fbdea0cf2e1c111000f1180d35d96f5326c8/src/./test-formany.jl#L1-L210' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/d3ca8cc1aacdff2916d48e3395d5940684fba86a/src/./test-formany.jl#L1-L211' class='documenter-source'>source</a><br></p>
               
             </div>
           </div>
