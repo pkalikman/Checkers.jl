@@ -25,7 +25,7 @@ extra_javascript:
   - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML
   - assets/mathjaxhelper.js
 
-docs_dir: 'site'
+docs_dir: 'build'
 
 pages:
   - Home: 'index.md'
