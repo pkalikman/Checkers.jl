@@ -53,13 +53,23 @@
     <a class="current" href=".">Home</a>
     <ul class="subnav">
             
-    <li class="toctree-l2"><a href="#checkersjl-documentation">Checkers.jl Documentation</a></li>
+    <li class="toctree-l2"><a href="#checkers-documentation">Checkers 🏁 🏁 Documentation</a></li>
     
         <ul>
         
-            <li><a class="toctree-l3" href="#testing-macros">Testing Macros</a></li>
+            <li><a class="toctree-l3" href="#contents">Contents</a></li>
         
-            <li><a class="toctree-l3" href="#index">Index</a></li>
+            <li><a class="toctree-l3" href="#introduction">Introduction</a></li>
+        
+            <li><a class="toctree-l3" href="#quickstart-guide">Quickstart Guide</a></li>
+        
+            <li><a class="toctree-l3" href="#the-macros-in-more-detail">The Macros in More Detail</a></li>
+        
+            <li><a class="toctree-l3" href="#see-also">See Also</a></li>
+        
+            <li><a class="toctree-l3" href="#license">License</a></li>
+        
+            <li><a class="toctree-l3" href="#credits">Credits</a></li>
         
         </ul>
     
@@ -121,16 +131,147 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="checkersjl-documentation">Checkers.jl Documentation</h1>
-<p><a id='Testing-Macros-1'></a></p>
-<h2 id="testing-macros">Testing Macros</h2>
-<p><a id='Index-1'></a></p>
-<h2 id="index">Index</h2>
+                <p><a id='Checkers-Documentation-1'></a></p>
+<h1 id="checkers-documentation">Checkers 🏁 🏁 Documentation</h1>
+<p><a id='Contents-1'></a></p>
+<h2 id="contents">Contents</h2>
 <ul>
-<li><a href="macros/test-exists/#Checkers.@test_exists"><code>Checkers.@test_exists</code></a></li>
-<li><a href="macros/test-forall/#Checkers.@test_forall"><code>Checkers.@test_forall</code></a></li>
-<li><a href="macros/test-formany/#Checkers.@test_formany"><code>Checkers.@test_formany</code></a></li>
+<li><a href=".#Checkers-Documentation-1">Checkers 🏁 🏁 Documentation</a><ul>
+<li><a href=".#Contents-1">Contents</a></li>
+<li><a href=".#Introduction-1">Introduction</a></li>
+<li><a href=".#Quickstart-Guide-1">Quickstart Guide</a></li>
+<li><a href=".#The-Macros-in-More-Detail-1">The Macros in More Detail</a></li>
+<li><a href=".#See-Also-1">See Also</a></li>
+<li><a href=".#License-1">License</a></li>
+<li><a href=".#Credits-1">Credits</a></li>
 </ul>
+</li>
+</ul>
+<p><a id='Introduction-1'></a></p>
+<h2 id="introduction">Introduction</h2>
+<p>Automated testing macros inspired by a <a href="https://github.com/pao/QuickCheck.jl">Julia implementation</a> of Koen Claessen and John Hughes' <a href="http://www.cse.chalmers.se/~rjmh/QuickCheck/">QuickCheck</a> property-based randomized tester.</p>
+<p>Checkers lets you write quick property-based tests:</p>
+<div class="codehilite"><pre><span></span>julia&gt; using Checkers
+julia&gt; f(x) = x^2
+julia&gt; @test_formany -10&lt;x&lt;10, f(x) &gt;= 0
+Test Passed
+  Expression: (:((-10 &lt; x &lt; 10, f(x) &gt;= 0)), :(mode = test_formany))
+
+julia&gt; @test_forall x in -10:10, f(x) &gt;=0
+Test Passed
+  Expression: (x in -10:10, f(x) &gt;= 0)
+    @test_forall x in 0:10, f(x) &gt;= 0
+
+julia&gt; @test_forall x in -10:10, f(x) &gt; 0 #Should fail b/c f(0) = 0
+Test Failed
+  Expression: (x in -10:10, f(x) &gt; 0)
+ERROR: There was an error during testing
+</pre></div>
+
+
+<p><a id='Quickstart-Guide-1'></a></p>
+<h2 id="quickstart-guide">Quickstart Guide</h2>
+<p>This package provides three macros for test generation:</p>
+<ol>
+<li><code>@test_forall</code></li>
+<li><code>@test_formany</code></li>
+<li><code>@test_exists</code></li>
+</ol>
+<p>In each case, the basic format is</p>
+<div class="codehilite"><pre><span></span>@[test] [set of values to test] [property to test]
+</pre></div>
+
+
+<p>The <em>property</em> is any expression that evaluates to a boolean, making reference to some dummy variable specified in the set of values to test.</p>
+<p>The macros differ in how they specify and choose values to test:</p>
+<ul>
+<li>Use <code>@test_forall</code> when you can specify the exact <em>finite set</em> of values to  test.  For example, <code>-3:3</code> specifies the exact set of 7 Int64 values, {-3,-2,-1,0,1,2,3}, on which you wish to test the property. Because the user specifies the test universe completely, and that universe is finite, every value is tested and @test_forall returns only true positives and true negatives.</li>
+<li>Use <code>@test_formany</code> when you wish to specify a (possibly infinite) set of values  to test by restricted comprehension from some universe.  For example, <code>-3 &lt; x::Float64 &lt; 3</code> specifies that some number of <code>Float64</code>s <code>x</code>, satisfying the condition <code>-3 &lt; x &lt; 3</code>, will be tested for the property. Note that <code>@test_formany</code> is meant to capture the idea of the universal  quantifier, but is not universal on infinite sets,  since the package will only run a finite number of tests. That is, <code>@test_formany</code> may return a false positive, as it cannot be comprehensive. It will not, however, return a false negative.</li>
+<li>Use <code>@test_exists</code> like <code>@test_formany</code>, but when you wish the test to pass when  at least one value satisfies the property, rather than when all tested values satisfy the property. Like <code>@test_formany</code>, <code>@test_exists</code> <em>simulates</em> the existential quantifier, but is not strictly speaking complete.  That is, <code>@test_exists</code> may return a false negative, in the case that a value exists but was not lucky enough to be tested. It will not, however, return a false positive.</li>
+</ul>
+<p><a id='The-Macros-in-More-Detail-1'></a></p>
+<h2 id="the-macros-in-more-detail">The Macros in More Detail</h2>
+<p><code>@test_forall</code> takes an expression specifying one or more dummy variables, discrete sets of values for those variables, and an expression, and tests the expression substituting every combination of the variables  (the Cartesian product of their possible value sets).  (Since Julia 0.5, <code>@test_forall x in [Collection], P(x)</code> is quite similar to  <code>@test for x in [Collection] P(x) end</code>, and we may deprecate / remove it for that reason.)</p>
+<p>The property may be a conditional expression such as <code>P(x) --&gt; Q(x)</code>, in which case truth may be vacuous when <code>P(x)</code> is false <code>\forall x</code> tested.</p>
+<p><code>@test_formany</code> functions like <code>@test_forall</code>, but allows quantifying over infinite sets such as <code>[a,b] \subset \mathbb R</code>, etc. by sampling these sets uniformly at random. It provides additional modifiers to control how many tests it runs, which are especially helpful for ensuring that conditional-expression tests are not only passed vacuously.</p>
+<p><code>@test_exists X</code> is essentially shorthand for <code>! (@test_formany !X)</code>.</p>
+<p><a id='Exhaustion-1'></a></p>
+<h3 id="exhaustion">Exhaustion</h3>
+<p>Note that <code>@test_formany</code> and <code>@test_exists</code> are not strictly speaking exhaustive or true universal/existential quantifiers. <code>@test_formany x Expr(x)</code> may pass even when <code>\exists x</code> s.t. <code>Expr(x)</code> is false, and <code>@test_exists x Expr(x)</code> may fail even under the same circumstances. However, <code>@test_forall</code> is exhaustive.</p>
+<p>Tests that do not exhaust their universe take additional keyword arguments  <code>ntests</code> and <code>maxtests</code> to control how many tests to run.</p>
+<p><a id='Examples-1'></a></p>
+<h3 id="examples">Examples</h3>
+<p>Basic usage:</p>
+<div class="codehilite"><pre><span></span>@test_forall  x in 1:5,  x^2 &lt; 30
+@test_formany 1 &lt; x &lt; 5, x^2 &lt; 30
+@test_exists  1 &lt; x &lt; 5, x^2 &lt; 30
+</pre></div>
+
+
+<p>Control how many tests in <code>@test_formany</code>:</p>
+<div class="codehilite"><pre><span></span>@test_formany ntests = 10_000  1 &lt; x &lt; 5, x^2 &lt; 30
+</pre></div>
+
+
+<p>Test a conditional property, passing only if 100 of the tests are not vacuous:</p>
+<div class="codehilite"><pre><span></span>@test_formany ntests = 100  0 &lt; x &lt; Inf, 0 &lt; y &lt; Inf,  x &lt; y --&gt; log(x)&lt;log(y)
+</pre></div>
+
+
+<p>Test a conditional property, passing only if 100 of the tests are not vacuous, but only allow 100 tests:</p>
+<div class="codehilite"><pre><span></span>@test_formany ntests = 100 maxtests = 100  0 &lt; x &lt; 10,  0 &lt; y &lt; 10,  x &lt; y --&gt; x^2 &lt; y^2
+</pre></div>
+
+
+<p>Test a conditional property, passing only if 100 of the test are not vacuous, but allow 100,000 tests:</p>
+<div class="codehilite"><pre><span></span>@test_formany ntests = 100 maxtests = 100_000 0 &lt; x &lt; 10,  0 &lt; y &lt; 10,  x &lt; y --&gt; x^2 &lt; y^2
+</pre></div>
+
+
+<p>Note that while the former (<code>maxtests=100</code>) usually fails, the latter (<code>maxtests=100_000</code>) passes.  This is because <code>@test_formany</code> generates 100 random pairs of <code>(x,y)</code>, but not all of them are likely to satisfy <code>x &lt; y</code>. Therefore when <code>maxtests=100</code>, it will not generate enough pairs to test the consequent of the conditional expression.</p>
+<p>See <code>?@test_forall</code>, etc. and <code>examples/examples.jl</code> for more detailed information. </p>
+<p><a id='Logging-1'></a></p>
+<h3 id="logging">Logging</h3>
+<p>Test logging is available in <code>@test_formany</code> to see which values were actually tested by using the keyword <code>logto</code> and supplying an output path:</p>
+<div class="codehilite"><pre><span></span>@test_formany logto = &quot;tests.csv&quot; 1&lt;x&lt;5, x^2 &lt; 30
+</pre></div>
+
+
+<p><a id='Output-1'></a></p>
+<h3 id="output">Output</h3>
+<p>Test macros output results of type <code>Base.Test.Pass</code>, <code>Base.Test.Fail</code>,  or <code>Base.Test.Error</code> in order to function seamlessly with <code>Base.Test.@testset</code>.</p>
+<div class="codehilite"><pre><span></span>@testset &quot;Multiple tests&quot; begin 
+    @test_forall x in 1:5, x^2 &lt; 30
+    @test_forall x in 1:6, x^2 &lt; 30
+end
+</pre></div>
+
+
+<p><a id='See-Also-1'></a></p>
+<h2 id="see-also">See Also</h2>
+<p>Also of note are these more comprehensive (and we feel complicated) packages.  Our goal is to provide a lightweight, ready-to-use out-of-the-box alternative:</p>
+<ul>
+<li><a href="https://github.com/robertfeldt/BaseTestAuto.jl">BaseTestAuto</a></li>
+<li><a href="https://github.com/simonpoulding/DataGenerators.jl">DataGenerators</a></li>
+</ul>
+<p><a id='License-1'></a></p>
+<h2 id="license">License</h2>
+<p>The Checkers.jl package is licensed under the MIT "Expat" License:</p>
+<p>Copyright (c) 2017: Efim Abrikosov &amp; Philip Kalikman.</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+<p><a id='Credits-1'></a></p>
+<h2 id="credits">Credits</h2>
+<p>This package was co-designed and co-written by  <a href="https://github.com/flomastruk">Efim Abrikosov</a> and <a href="https://github.com/pkalikman/">Philip Kalikman</a> while each was a graduate student at Yale University.</p>
+<ul>
+<li>Efim wrote the majority of the code,</li>
+</ul>
+<p>which is based on but does not directly use <a href="https://github.com/pao/QuickCheck.jl">the work of Patrick O'Leary</a></p>
+<ul>
+<li>Philip designed the majority of the functionality and syntax,</li>
+</ul>
+<p>building on <a href="http://www.cs.tufts.edu/~nr/cs257/archive/john-hughes/quick.pdf">the work (in Haskell) of Koen Classen and John Hughes</a></p>
               
             </div>
           </div>
@@ -181,5 +322,5 @@
 
 <!--
 MkDocs version : 0.16.3
-Build Date UTC : 2017-07-11 13:32:04
+Build Date UTC : 2017-07-11 14:55:07
 -->

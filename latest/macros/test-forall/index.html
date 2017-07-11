@@ -62,9 +62,6 @@
     <a class="current" href="./">Test-forall</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#examples">Examples</a></li>
-    
-
     </ul>
                 </li>
                 <li class="">
@@ -132,7 +129,7 @@
 <p><strong>Details</strong></p>
 <p>Code constructs a sequence of for-loops and checks that proposition evaluates to <code>true</code> for all values of variables specified. Equivalently, test is performed over cartesian product of ranges of variables.</p>
 <p>Loops are generated from <code>argument_data</code> inductively: from outer-loop to inner-loop. If range of a variable depends on other variables, then their ranges must be defined in <code>argument_data</code> earlier.</p>
-<h1 id="examples">Examples</h1>
+<p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_forall</span> <span class="n">x</span> <span class="kp">in</span> <span class="o">-</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 <span class="n">Test</span> <span class="n">Passed</span>
   <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="n">x</span> <span class="kp">in</span> <span class="o">-</span><span class="mi">1</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span><span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
@@ -162,7 +159,7 @@
 </pre></div>
 
 
-<p><a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/e8df2530915f2263affd52baab660b8420b88d5f/src/./test-forall.jl#L1-L44' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/907003dfc2bf0629392f653e7a15cc769e609adb/src/./test-forall.jl#L1-L44' class='documenter-source'>source</a><br></p>
               
             </div>
           </div>
