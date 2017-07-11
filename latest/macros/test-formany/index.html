@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="pkalikman">
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Test-formany - Checkers.jl</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/highlight.css">
+  <link href="../../assets/Documenter.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Test-formany";
+    var mkdocs_page_input_path = "macros/test-formany.md";
+    var mkdocs_page_url = "/macros/test-formany/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Checkers.jl</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Macros</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../test-forall/">Test-forall</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Test-formany</a>
+    <ul class="subnav">
+            
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../test-exists/">Test-exists</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Checkers.jl</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Macros &raquo;</li>
+        
+      
+    
+    <li>Test-formany</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/pkalikman/Checkers.jl/edit/master/docs/macros/test-formany.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><a id='Checkers.@test_formany' href='#Checkers.@test_formany'>#</a>
+<strong><code>Checkers.@test_formany</code></strong> &mdash; <em>Macro</em>.</p>
+<div class="codehilite"><pre><span></span>@test_formany [ntests = 100] [maxtests = 1000] [logto = &quot;&quot;] [argument_data, proposition]
+</pre></div>
+
+
+<p>Takes proposition depending on some variables, generates sample of their values and tests the proposition. Returns <code>Pass</code> if proposition holds for all values in the sample, <code>Fail</code> if proposition does not hold for some value, and <code>Error</code> if a part of code could not be evaluated.</p>
+<p><strong>Arguments</strong></p>
+<p>Macro accepts a tuple of expressions that describe either statement of a test or specify optional keyword arguments.</p>
+<p>Statement of a test must be a sequence of comma-separated expressions, where all but last expressions are read as <code>argument_data</code> and last statement is <code>proposition</code> depending on these arguments.</p>
+<ul>
+<li><code>argument_data</code> consists of arbitrarily many expressions containing</li>
+</ul>
+<p>information about variables, their types and conditions on them. Expressions must have one of the following forms:</p>
+<ul>
+<li><code>a&lt;x::T&lt;b</code> or <code>a&gt;x::T&gt;b</code>, where middle variable <code>x</code> must be a symbol;</li>
+</ul>
+<p><code>T</code>  must be a type; bounds <code>a</code> &amp; <code>b</code> can be arbitrary expressions;</p>
+<ul>
+<li><code>a&lt;&lt;x::T&lt;b</code>, <code>a&lt;x::T&lt;&lt;b</code>, <code>a&gt;&gt;x::T&gt;b</code> or <code>a&gt;x::T&gt;&gt;b</code>,</li>
+</ul>
+<p>similar to the one above;</p>
+<ul>
+<li>shorthand <code>x</code> instead of <code>x::T</code> may be used, e.g. <code>a&lt;x&lt;b</code>,</li>
+</ul>
+<p>then type of variable defaults to <code>Float64</code>.</p>
+<ul>
+<li>
+<p><code>proposition</code>: is the expression to be tested. Two types of propositions are allowed:</p>
+<ul>
+<li><code>proposition</code> of form <code>condition--&gt;statement</code>, where <code>condition</code> and</li>
+</ul>
+<p><code>statement</code> are boolean-valued expressions</p>
+<ul>
+<li><code>proposition</code> is boolean-valued expression itself</li>
+</ul>
+</li>
+</ul>
+<p>Optional keyword arguments include the following:</p>
+<ul>
+<li><code>ntests = 100</code>: number of tests that must be performed.</li>
+<li><code>maxtests = 1000</code>: maximal number of attempts to generate arguments</li>
+</ul>
+<p>satisfying <code>condition</code></p>
+<ul>
+<li><code>logto = "path_to_file"</code>: if provided then parsed as a path to file,</li>
+</ul>
+<p>where log of tests will be recorded.</p>
+<p><strong>Description</strong></p>
+<p>Macro @test_formany is a test that attempts to generate sample of argument values of size <code>ntests</code> satisfying the <code>condition</code> if it is given. Then it checks whether the proposition holds for all elements in the sample. If number of attempts exceeds <code>maxtests</code> parameter before at least <code>ntests</code> values for arguments are generated, macro gives output <code>Base.Test.Error</code>.</p>
+<p>If <code>proposition</code> is of form <code>condition--&gt;statement</code> (see arguments list), then test checks whether implication holds. Namely, the test passes if whenever <code>condition</code> evaluates to <code>true</code> for generated argument values, then <code>statement</code> also evaluates to <code>true</code>.</p>
+<p>If <code>proposition</code> is just a boolean-valued expression, code simply checks whether <code>prop</code> holds for generated values.</p>
+<p>Some caution is required to avoid vacuous conditions. If test is unable to generate values satisfying the <code>condition</code> after <code>maxtests</code> attempts, output of the test is Base.Test.Error as mentioned before.</p>
+<p>Default for optional keyword arguments is the following: <code>ntests = 100, maxtests = 1000</code>. If only <code>ntests</code> parameter is specified, <code>maxtests = 10*ntests</code>. If <code>logto = "path_to_file"</code> is given, log of test will be written to corresponding file,for example:</p>
+<ul>
+<li><code>@test_formany ntests = 10 maxtests = 1000  logto =  "./test_log.csv" 1&lt;x::Float32&lt;10, proposition</code></li>
+<li><code>@test_formany ntests = 50 logto = "./test_log.csv" 1&lt;x&lt;10, proposition</code> ## maxtests = 500</li>
+<li><code>@test_formany logto = "./test_log.csv" 1&lt;x&lt;&lt;Inf, proposition</code> ## ntests = 100; maxtests = 1000</li>
+<li><code>@test_formany ntests = 50 maxtests = 1000 1&lt;x&lt;10, proposition</code> ## not logged</li>
+<li><code>@test_formany 1&lt;x::Int32&lt;Inf, proposition logto = "./test_log.csv" maxtests = 1000 ntests = 10</code> ## order is not important</li>
+</ul>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_formany</span> <span class="mi">100</span><span class="o">&gt;</span><span class="n">x</span><span class="o">::</span><span class="kt">Float64</span><span class="o">&gt;</span><span class="mi">10</span><span class="p">,</span> <span class="n">x</span><span class="o">+</span><span class="mi">10</span><span class="o">&lt;</span><span class="n">y</span><span class="o">::</span><span class="kt">Float64</span><span class="o">&lt;&lt;</span><span class="mi">1000</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="mi">5</span><span class="o">&lt;</span><span class="n">z</span><span class="o">::</span><span class="kt">Float64</span><span class="o">&lt;</span><span class="nb">Inf</span><span class="p">,</span> <span class="n">z</span><span class="o">&gt;</span><span class="n">x</span><span class="o">+</span><span class="mi">5</span>
+<span class="n">Test</span> <span class="n">Passed</span>
+  <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="o">:</span><span class="p">((</span><span class="mi">100</span> <span class="o">&gt;</span> <span class="n">x</span><span class="o">::</span><span class="kt">Float64</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">,</span><span class="n">x</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">&lt;</span> <span class="n">y</span><span class="o">::</span><span class="kt">Float64</span> <span class="o">&lt;&lt;</span> <span class="mi">1000</span><span class="p">,</span><span class="n">y</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">&lt;</span> <span class="n">z</span><span class="o">::</span><span class="kt">Float64</span> <span class="o">&lt;</span> <span class="nb">Inf</span><span class="p">,</span><span class="n">z</span> <span class="o">&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)),)</span>
+
+<span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_formany</span> <span class="n">ntests</span> <span class="o">=</span> <span class="mi">1000</span> <span class="mi">100</span><span class="o">&gt;</span><span class="n">x</span><span class="o">::</span><span class="kt">Float64</span><span class="o">&gt;</span><span class="mi">10</span><span class="p">,</span> <span class="n">x</span><span class="o">+</span><span class="mi">10</span><span class="o">&lt;</span><span class="n">y</span><span class="o">::</span><span class="kt">Float64</span><span class="o">&lt;&lt;</span><span class="mi">1000</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="mi">5</span><span class="o">&lt;</span><span class="n">z</span><span class="o">::</span><span class="kt">Float64</span><span class="o">&lt;</span><span class="nb">Inf</span><span class="p">,</span> <span class="n">z</span><span class="o">&gt;</span><span class="n">x</span><span class="o">+</span><span class="mi">6</span>
+<span class="n">String</span><span class="p">[</span><span class="s">&quot;x = 25.18875813550991&quot;</span><span class="p">,</span><span class="s">&quot;y = 35.192306691353075&quot;</span><span class="p">,</span><span class="s">&quot;z = 31.183953098939906&quot;</span><span class="p">]</span>
+<span class="n">Test</span> <span class="n">Failed</span>
+  <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="o">:</span><span class="p">(</span><span class="n">ntests</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">),</span><span class="o">:</span><span class="p">((</span><span class="mi">100</span> <span class="o">&gt;</span> <span class="n">x</span><span class="o">::</span><span class="kt">Float64</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">,</span><span class="n">x</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">&lt;</span> <span class="n">y</span><span class="o">::</span><span class="kt">Float64</span> <span class="o">&lt;&lt;</span> <span class="mi">1000</span><span class="p">,</span><span class="n">y</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">&lt;</span> <span class="n">z</span><span class="o">::</span><span class="kt">Float64</span> <span class="o">&lt;</span> <span class="nb">Inf</span><span class="p">,</span><span class="n">z</span> <span class="o">&gt;</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">6</span><span class="p">)))</span>
+
+<span class="c">## example of bad design for generators:</span>
+<span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_formany</span> <span class="o">-</span><span class="mi">1000</span><span class="o">&lt;</span><span class="n">x</span><span class="o">::</span><span class="kt">Float64</span><span class="o">&lt;</span><span class="mi">1000</span><span class="p">,</span> <span class="n">x</span><span class="o">&gt;</span><span class="mi">999</span><span class="o">--&gt;</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="o">&gt;</span><span class="mi">1000</span>
+<span class="n">Error</span> <span class="n">During</span> <span class="n">Test</span>
+  <span class="n">Test</span> <span class="n">threw</span> <span class="n">an</span> <span class="n">exception</span> <span class="n">of</span> <span class="k">type</span> <span class="kt">ErrorException</span>
+  <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="o">:</span><span class="p">((</span><span class="o">-</span><span class="mi">1000</span> <span class="o">&lt;</span> <span class="n">x</span><span class="o">::</span><span class="kt">Float64</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">,</span><span class="o">$</span><span class="p">(</span><span class="kt">Expr</span><span class="p">(</span><span class="o">:--&gt;</span><span class="p">,</span> <span class="o">:</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">999</span><span class="p">),</span> <span class="o">:</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">))))),)</span>
+  <span class="n">Found</span> <span class="n">only</span> <span class="mi">1</span><span class="o">/</span><span class="mi">100</span> <span class="n">values</span> <span class="n">satisfying</span> <span class="n">given</span> <span class="n">condition</span><span class="o">.</span>
+
+<span class="c">## log is increasing</span>
+<span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_formany</span> <span class="nb">Inf</span><span class="o">&gt;</span><span class="n">x</span><span class="o">::</span><span class="kt">Float64</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">,</span><span class="nb">Inf</span><span class="o">&gt;</span><span class="n">y</span><span class="o">::</span><span class="kt">Float64</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="o">&lt;</span><span class="n">y</span><span class="o">--&gt;</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">&lt;</span><span class="n">log</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="n">ntests</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">Test</span> <span class="n">Passed</span>
+  <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="o">:</span><span class="p">((</span><span class="nb">Inf</span> <span class="o">&gt;</span> <span class="n">x</span><span class="o">::</span><span class="kt">Float64</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span><span class="nb">Inf</span> <span class="o">&gt;</span> <span class="n">y</span><span class="o">::</span><span class="kt">Float64</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span><span class="o">$</span><span class="p">(</span><span class="kt">Expr</span><span class="p">(</span><span class="o">:--&gt;</span><span class="p">,</span> <span class="o">:</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span><span class="p">),</span> <span class="o">:</span><span class="p">(</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">log</span><span class="p">(</span><span class="n">y</span><span class="p">)))))),</span><span class="o">:</span><span class="p">(</span><span class="n">ntests</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">))</span>
+
+<span class="c">## f(x) = x^3 is not convex on [-100,100]</span>
+<span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_formany</span> <span class="mi">0</span><span class="o">&lt;</span><span class="n">a</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">100</span><span class="o">&lt;</span><span class="n">x</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">,</span><span class="o">-</span><span class="mi">100</span><span class="o">&lt;</span><span class="n">y</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">,(</span><span class="n">a</span><span class="o">*</span><span class="n">x</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">y</span><span class="p">)</span><span class="o">^</span><span class="mi">3</span><span class="o">&lt;</span><span class="n">a</span><span class="o">*</span><span class="n">x</span><span class="o">^</span><span class="mi">3</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">y</span><span class="o">^</span><span class="mi">3</span>
+<span class="n">String</span><span class="p">[</span><span class="s">&quot;a = 0.39535367198058546&quot;</span><span class="p">,</span><span class="s">&quot;x = -13.538004569422625&quot;</span><span class="p">,</span><span class="s">&quot;y = 0.8504731053549079&quot;</span><span class="p">]</span>
+<span class="n">Test</span> <span class="n">Failed</span>
+  <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="o">:</span><span class="p">((</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">100</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">,</span><span class="o">-</span><span class="mi">100</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">,(</span><span class="n">a</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">^</span> <span class="mi">3</span> <span class="o">&lt;</span> <span class="n">a</span> <span class="o">*</span> <span class="n">x</span> <span class="o">^</span> <span class="mi">3</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span> <span class="o">^</span> <span class="mi">3</span><span class="p">)),)</span>
+
+<span class="c">## f(x) = x^3 is convex on [-100,100]</span>
+<span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_formany</span> <span class="mi">0</span><span class="o">&lt;</span><span class="n">a</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="o">&lt;</span><span class="n">x</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="o">&lt;</span><span class="n">y</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">x</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">y</span><span class="p">)</span><span class="o">^</span><span class="mi">3</span><span class="o">&lt;=</span><span class="n">a</span><span class="o">*</span><span class="n">x</span><span class="o">^</span><span class="mi">3</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">y</span><span class="o">^</span><span class="mi">3</span>
+<span class="n">Test</span> <span class="n">Passed</span>
+  <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="o">:</span><span class="p">((</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">,</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">,(</span><span class="n">a</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> <span class="o">^</span> <span class="mi">3</span> <span class="o">&lt;=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">x</span> <span class="o">^</span> <span class="mi">3</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">y</span> <span class="o">^</span> <span class="mi">3</span><span class="p">)),)</span>
+
+<span class="c">## Cobb-Douglas utility function is concave</span>
+<span class="n">julia</span><span class="o">&gt;</span> <span class="k">function</span> <span class="n">respects_concavity</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span>
+                  <span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="o">*</span><span class="n">x1</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="n">x2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">t</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+              <span class="k">end</span>
+
+<span class="n">julia</span><span class="o">&gt;</span> <span class="k">function</span> <span class="n">respects_weak_concavity</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">)</span>
+                  <span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="o">*</span><span class="n">x1</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="n">x2</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">t</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">f</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+              <span class="k">end</span>
+
+<span class="n">julia</span><span class="o">&gt;</span> <span class="k">function</span> <span class="n">cobb_douglas</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+                  <span class="n">prod</span><span class="p">(</span><span class="n">x</span><span class="o">.^</span><span class="n">a</span><span class="p">)</span>
+              <span class="k">end</span>
+
+<span class="c"># This passes the @test_formany, since probability of discovering a counter-example with a = .5 is zero.</span>
+<span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_formany</span> <span class="mi">0</span><span class="o">&lt;</span><span class="n">t</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="o">&lt;</span><span class="n">a</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">&lt;</span><span class="n">x1</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="o">&lt;</span><span class="n">x2</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="o">&lt;</span><span class="n">y1</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="o">&lt;</span><span class="n">y2</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span><span class="n">respects_concavity</span><span class="p">(</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="n">cobb_douglas</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="n">a</span><span class="p">],</span><span class="n">x</span><span class="p">),</span><span class="n">t</span><span class="p">,[</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">],[</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">])</span>
+<span class="n">Test</span> <span class="n">Passed</span>
+  <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="o">:</span><span class="p">((</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">x1</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">x2</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">y1</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">y2</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span><span class="n">respects_concavity</span><span class="p">((</span><span class="n">x</span><span class="o">-&gt;</span><span class="k">begin</span>  <span class="c"># REPL[5], line 1:</span>
+                    <span class="n">cobb_douglas</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">],</span><span class="n">x</span><span class="p">)</span>
+                <span class="k">end</span><span class="p">),</span><span class="n">t</span><span class="p">,[</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">],[</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">]))),)</span>
+
+<span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_formany</span> <span class="mi">0</span><span class="o">&lt;</span><span class="n">t</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="o">&lt;</span><span class="n">a</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">&lt;</span><span class="n">x1</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="o">&lt;</span><span class="n">x2</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="o">&lt;</span><span class="n">y1</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="o">&lt;</span><span class="n">y2</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">,</span><span class="n">respects_weak_concavity</span><span class="p">(</span><span class="n">x</span> <span class="o">-&gt;</span> <span class="n">cobb_douglas</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="n">a</span><span class="p">],</span><span class="n">x</span><span class="p">),</span><span class="n">t</span><span class="p">,[</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">],[</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">])</span>
+<span class="n">Test</span> <span class="n">Passed</span>
+  <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="o">:</span><span class="p">((</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">x1</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">x2</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">y1</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">y2</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span><span class="n">respects_weak_concavity</span><span class="p">((</span><span class="n">x</span><span class="o">-&gt;</span><span class="k">begin</span>  <span class="c"># REPL[6], line 1:</span>
+                    <span class="n">cobb_douglas</span><span class="p">([</span><span class="n">a</span><span class="p">,</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">],</span><span class="n">x</span><span class="p">)</span>
+                <span class="k">end</span><span class="p">),</span><span class="n">t</span><span class="p">,[</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">],[</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">]))),)</span>
+
+<span class="c">## handling errors</span>
+<span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_formany</span> <span class="o">-</span><span class="mi">1</span><span class="o">&lt;</span><span class="n">x</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">abs</span><span class="p">(</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">&gt;</span><span class="mi">0</span>
+<span class="n">Error</span> <span class="n">During</span> <span class="n">Test</span>
+  <span class="n">Test</span> <span class="n">threw</span> <span class="n">an</span> <span class="n">exception</span> <span class="n">of</span> <span class="k">type</span> <span class="kt">DomainError</span>
+  <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="o">:</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">,</span><span class="n">abs</span><span class="p">(</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)),)</span>
+  <span class="kt">DomainError</span>
+</pre></div>
+
+
+<p><a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/e8df2530915f2263affd52baab660b8420b88d5f/src/./test-formany.jl#L1-L142' class='documenter-source'>source</a><br></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../test-exists/" class="btn btn-neutral float-right" title="Test-exists">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../test-forall/" class="btn btn-neutral" title="Test-forall"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/pkalikman/Checkers.jl" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../test-forall/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../test-exists/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+      <script src="../../assets/mathjaxhelper.js"></script>
+
+</body>
+</html>
