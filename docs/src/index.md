@@ -8,8 +8,8 @@ CurrentModule = Checkers
 
 ```@contents
 Pages = [
-    "macros/test-forall.md"
-    "macros/test-formany.md"
+    "macros/test-forall.md",
+    "macros/test-formany.md",
     "macros/test-forexists.md"
     ]
 Depth = 2
