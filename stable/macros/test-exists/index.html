@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="pkalikman">
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Test-exists - Checkers.jl</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/highlight.css">
+  <link href="../../assets/Documenter.css" rel="stylesheet">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Test-exists";
+    var mkdocs_page_input_path = "macros/test-exists.md";
+    var mkdocs_page_url = "/macros/test-exists/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Checkers.jl</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Macros</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../test-forall/">Test-forall</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../test-formany/">Test-formany</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Test-exists</a>
+    <ul class="subnav">
+            
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Checkers.jl</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Macros &raquo;</li>
+        
+      
+    
+    <li>Test-exists</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/pkalikman/Checkers.jl/edit/master/docs/macros/test-exists.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><a id='Checkers.@test_exists' href='#Checkers.@test_exists'>#</a>
+<strong><code>Checkers.@test_exists</code></strong> &mdash; <em>Macro</em>.</p>
+<div class="codehilite"><pre><span></span>@test_exists [ntests = 100] [maxtests = 1000] [logto = &quot;&quot;] argument_data, prop
+</pre></div>
+
+
+<p>Checks <code>prop</code> on randomly generated samples values specified in <code>argument_data</code>.  Returns <code>Pass</code> if <code>prop</code> holds for at least one value in the sample,  <code>Fail</code> if <code>prop</code> fails to hold for all sampled values,  and <code>Error</code> if a part of the code could not be evaluated or if insufficient non-vacuous tests are generated.</p>
+<p><strong>Description</strong></p>
+<p><code>@test_exists</code> is to <code>@test_formany</code> as the existential quantifier is to the universal quantifier. That is, </p>
+<div class="codehilite"><pre><span></span>( @test_exists x ∈ X, P(x)  ) == !( @test_formany x ∈ X, !P(x) )
+</pre></div>
+
+
+<p>Consequently, the same concerns with vacuity avoidance apply. Additionally, analogous concerns with false positivity  apply: where <code>@test_formany</code> may falsely validate a property by not exhausting its implicit test universe, <code>@test_exists</code> may falsely <em>in</em>validate a property by not exhausting its implicit search universe.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_exists</span> <span class="n">ntests</span> <span class="o">=</span> <span class="mi">1000</span> <span class="o">-</span><span class="mi">10</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span> <span class="n">x</span><span class="o">^</span><span class="mi">2</span> <span class="o">&gt;</span> <span class="mi">99</span>
+<span class="n">String</span><span class="p">[</span><span class="s">&quot;x = -9.966560160994264&quot;</span><span class="p">]</span>
+<span class="n">Test</span> <span class="n">Passed</span>
+  <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="o">:</span><span class="p">(</span><span class="n">ntests</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">),</span><span class="o">:</span><span class="p">((</span><span class="o">-</span><span class="mi">10</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">,</span><span class="n">x</span> <span class="o">^</span> <span class="mi">2</span> <span class="o">&gt;</span> <span class="mi">99</span><span class="p">)))</span>
+
+<span class="c">## Here, the values of x, y, and z are generated independently, </span>
+<span class="c">## so a conditional statement with an antecedent that checks for</span>
+<span class="c">## order is necessary: </span>
+<span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_exists</span> <span class="n">ntests</span> <span class="o">=</span> <span class="mi">1000</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">*</span><span class="nb">pi</span><span class="p">,</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">*</span><span class="nb">pi</span><span class="p">,</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">z</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">*</span><span class="nb">pi</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">z</span> <span class="o">--&gt;</span> <span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">sin</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">sin</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> 
+<span class="n">String</span><span class="p">[</span><span class="s">&quot;x = 0.3082312611033726&quot;</span><span class="p">,</span><span class="s">&quot;y = 0.49557010329840206&quot;</span><span class="p">,</span><span class="s">&quot;z = 2.5966119472766076&quot;</span><span class="p">]</span>
+<span class="n">Test</span> <span class="n">Passed</span>
+  <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="o">:</span><span class="p">((</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="nb">pi</span><span class="p">,</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="nb">pi</span><span class="p">,</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">z</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="nb">pi</span><span class="p">,</span><span class="o">$</span><span class="p">(</span><span class="kt">Expr</span><span class="p">(</span><span class="o">:--&gt;</span><span class="p">,</span> <span class="o">:</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">z</span><span class="p">),</span> <span class="o">:</span><span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">sin</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">sin</span><span class="p">(</span><span class="n">z</span><span class="p">)))))),</span><span class="o">:</span><span class="p">(</span><span class="n">ntests</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">))</span>
+
+<span class="c">## By contrast, here, x, y, and z are generated with sequential </span>
+<span class="c">## reference to the previously generated value(s), </span>
+<span class="c">## so they satisfy x&lt;y&lt;z automatically.</span>
+<span class="c">## No conditional is needed.</span>
+<span class="n">julia</span><span class="o">&gt;</span> <span class="nd">@test_exists</span> <span class="mi">0</span><span class="o">&lt;</span><span class="n">x</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">*</span><span class="nb">pi</span><span class="p">,</span> <span class="n">x</span><span class="o">&lt;</span><span class="n">y</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">*</span><span class="nb">pi</span><span class="p">,</span> <span class="n">y</span><span class="o">&lt;</span><span class="n">z</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">*</span><span class="nb">pi</span><span class="p">,</span> <span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">&lt;</span><span class="n">sin</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">&lt;</span><span class="n">sin</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="n">String</span><span class="p">[</span><span class="s">&quot;x = 5.787034350107664&quot;</span><span class="p">,</span><span class="s">&quot;y = 6.23560263220101&quot;</span><span class="p">,</span><span class="s">&quot;z = 6.26802436856299&quot;</span><span class="p">]</span>
+<span class="n">Test</span> <span class="n">Passed</span>
+  <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="o">:</span><span class="p">((</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="nb">pi</span><span class="p">,</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="nb">pi</span><span class="p">,</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">z</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="nb">pi</span><span class="p">,</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">sin</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">sin</span><span class="p">(</span><span class="n">z</span><span class="p">))),)</span>
+
+<span class="c">## This returns Error, because the antecedent is too restrictive</span>
+<span class="c">## to generate 100 non-vacuous tests:</span>
+<span class="nd">@test_exists</span> <span class="n">ntests</span> <span class="o">=</span> <span class="mi">100</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">990</span> <span class="o">--&gt;</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mf">999.9</span> 
+<span class="n">Error</span> <span class="n">During</span> <span class="n">Test</span>
+  <span class="n">Test</span> <span class="n">threw</span> <span class="n">an</span> <span class="n">exception</span> <span class="n">of</span> <span class="k">type</span> <span class="kt">ErrorException</span>
+  <span class="n">Expression</span><span class="o">:</span> <span class="p">(</span><span class="o">:</span><span class="p">((</span><span class="mi">0</span> <span class="o">&lt;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">,</span><span class="o">$</span><span class="p">(</span><span class="kt">Expr</span><span class="p">(</span><span class="o">:--&gt;</span><span class="p">,</span> <span class="o">:</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">990</span><span class="p">),</span> <span class="o">:</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mf">999.9</span><span class="p">))))),</span><span class="o">:</span><span class="p">(</span><span class="n">ntests</span> <span class="o">=</span> <span class="mi">100</span><span class="p">))</span>
+  <span class="n">Found</span> <span class="n">only</span> <span class="mi">14</span><span class="o">/</span><span class="mi">100</span> <span class="n">values</span> <span class="n">satisfying</span> <span class="n">given</span> <span class="n">condition</span><span class="o">.</span>
+</pre></div>
+
+
+<p><a target='_blank' href='https://github.com/pkalikman/Checkers.jl/tree/d3ca8cc1aacdff2916d48e3395d5940684fba86a/src/./test-exists.jl#L1-L59' class='documenter-source'>source</a><br></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../test-formany/" class="btn btn-neutral" title="Test-formany"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/pkalikman/Checkers.jl" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../test-formany/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+      <script src="../../assets/mathjaxhelper.js"></script>
+
+</body>
+</html>
