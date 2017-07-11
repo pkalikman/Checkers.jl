@@ -3,8 +3,10 @@ using Documenter, Checkers
 makedocs(modules  = [Checkers],
          doctest  = false,
          clean    = true,
+         format   = :html,
          sitename = "Checkers.jl",
          authors  = "Philip Kalikman, Efim Abrikosov",
+         html_prettyurls = !("local" in ARGS),
          pages    = Any[
                         "Home" => "index.md",
                         "Macros" => Any["macros/test-forall.md",
