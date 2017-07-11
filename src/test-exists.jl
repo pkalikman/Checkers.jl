@@ -8,7 +8,7 @@ and `Error` if a part of the code could not be evaluated
 or if insufficient non-vacuous tests are generated.
 
 
-# Description
+## Description
 
 `@test_exists` is to `@test_formany` as the existential quantifier
 is to the universal quantifier.
@@ -23,7 +23,7 @@ by not exhausting its implicit test universe,
 `@test_exists` may falsely *in*validate a property
 by not exhausting its implicit search universe.
 
-# Examples
+## Examples
 
 ```julia
 julia> @test_exists ntests = 1000 -10 < x < 10, x^2 > 99

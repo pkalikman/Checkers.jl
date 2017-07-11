@@ -4,11 +4,6 @@
 CurrentModule = Checkers
 ```
 
-## Contents
-
-```@contents
-```
-
 ## Introduction
 
 Automated testing macros

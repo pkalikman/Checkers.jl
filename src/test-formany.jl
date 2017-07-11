@@ -7,7 +7,7 @@ Returns `Pass` if `prop` holds for all values in the sample,
 and `Error` if a part of the code could not be evaluated
 or if insufficient non-vacuous tests are generated.
 
-# Arguments
+## Arguments
 
 * `argument_data`:
   a sequence of comma-separated expressions, 
@@ -26,6 +26,7 @@ or if insufficient non-vacuous tests are generated.
     to the other boundary;
   * `a<x<b` etc., where the type `T` is omitted,
     and therefore defaults to `Float64`
+
 
 * `prop`: the property to be tested. Two types of properties are allowed:
 
@@ -54,18 +55,18 @@ Since `@test_formany` is pseudo-random and might pass a test that you
 expect to fail (or vice versa), this can be useful
 for debugging to see which actual test cases were tested.
 
-# Details
+## Details
 
 `@test_formany` generates a sample of test cases based on `argument_data`, 
 and tests `prop` on these values, returning `Pass` only if every test passes.
 
-## Basic Use
+### Basic Use
 
 When `prop` is just a boolean-valued expression,
 `@test_formany` simply checks whether `prop` holds for the values
 generated according to `argument_data`.
 
-## Advanced Use: Conditional Properties and Vacuity Avoidance
+### Advanced Use: Conditional Properties and Vacuity Avoidance
 
 When using `ntests = [some integer]`, with a `prop` of the form `antecedent --> consequent`,
 `@test_formany` will attempt to test `ntests` cases where the
@@ -113,7 +114,7 @@ then `@test_formany` will return `Base.Test.Error`.
 
 Keyword arguments are order-invariant.
 
-## Exhaustion
+### Exhaustion
 
 `@test_formany` tests a random sample of values specified
 by `argument_data`, which in typical use will imply that it
@@ -136,7 +137,7 @@ On the other hand, a counter-example may still
 exists even when `@test_formany` returns `Pass`
 on a conditional property after testing many non-vacuous antecedents.
 
-# Examples
+## Examples
 
 ```julia
 julia> @test_formany 100 > x::Float64 > 10, x+10 < y::Float64 << 1000, y-5 < z::Float64 < Inf, z > x+5

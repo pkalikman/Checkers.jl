@@ -6,7 +6,7 @@ Returns `Pass` if `prop` holds for all values tested,
 `Fail` if `prop` does not hold for some tested value, 
 and `Error` if a part of code could not be evaluated.
 
-# Arguments
+## Arguments
 
 * `argument_data`: a sequence of at least one comma-separated expression(s),
   specifying the sets of values for individual variables.  
@@ -21,7 +21,7 @@ and `Error` if a part of code could not be evaluated.
   arguments in specified ranges, 
   with reference to the dummy variables named in `argument_data`.
 
-# Details
+## Details
 
 `@test_forall` constructs a nested sequence of for-loops,
 and checks that `prop` evaluates to `true` 
@@ -36,7 +36,7 @@ to the innermost loop as the rightmost.
 Variable ranges may depend on the values of previously referenced
 variables (see third example).
 
-# Examples
+## Examples
 
 ```julia
 julia> @test_forall x in -1:1, x*(x-1)*(x+1) == 0

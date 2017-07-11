@@ -4,7 +4,7 @@
     Takes proposition depending on some variables, generates samples of their values
     and tests the proposition. Prints number of samples for which the proposition evaluated to `true`.
 
-# Arguments
+## Arguments
 
 Macro accepts a tuple of expressions that describe either statement of a test
 or specify optional keyword arguments.
@@ -46,7 +46,7 @@ where log of tests will be recorded.
   `:test_exists`. For modes different from `:none` see documentation for `@test_formany`
   and `@test_exists`.
 
-# Description
+## Description
 
 Macro `@test_cases` provides a convenient syntax for testing a boolean-valued
 proposition multiple times against randomly generated input. Output prints number
@@ -81,7 +81,8 @@ refer to @test_cases` code from other macros `@test_formany` and `@test_exists`.
 Macro calls `@test_cases working_mode = :test_formany argument_data, proposition`
 and `@test_formany argument_data, proposition` are fully equivalent.
 
-# Examples
+## Examples
+
 ```julia
 # example with default genenerator that draws values from uniform distribution
 @test_cases ntests = 10000 0<x<100, x>=50
