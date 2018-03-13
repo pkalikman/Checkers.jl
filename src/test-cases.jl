@@ -119,7 +119,7 @@ macro test_cases(exprs...)
     prop = :(); cond = :()
 
     # parsing expression
-	var_data = Array(Any, 3, 1)
+    var_data = Array{Any}(3, 1)
     for ex in exprs
         if isa(ex, Expr) && ex.head == :tuple  # parsing statements about
             var_data = parse_argument_data(ex) # variables, condition and
