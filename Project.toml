@@ -1,2 +1,7 @@
 name = "Checkers"
 uuid = "700e45bd-7bf5-5563-bdb4-6e688fe06d37"
+authors = ["Philip Kalikman <philip.kalikman@yu.edu>", "Efim Abrikosov <efim.abrikosov@yale.edu>"]
+version = "1.5.0"
+
+[deps]
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
