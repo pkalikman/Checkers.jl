@@ -82,11 +82,16 @@ macro test_forall(factex::Expr)
                 val = p.args[3]
                 push!(iterate.args,:($(esc(key))=$(esc(val))))
             end
+            last_value  = nothing
             prop = 
                 quote
+                    #Why on Earth does this work? 
+                    #Is there a clearer way to express this?
+                    last_value = $(esc(factex.args[end].args[2].args[2]))
                     res = res && $(esc(factex.args[end]))
                     if !res
                         fail_data = $(esc(factex.args[end]))
+                        more_data = $(esc(last_value))
                         break
                     end
                 end
@@ -100,13 +105,19 @@ macro test_forall(factex::Expr)
     quote
         res = true
         fail_data = false
+        more_data = false
         result = 
             try
                 $ex
                 if res
+                    @show 1
                     Pass(:test,$(Expr(:quote, factex)), nothing, nothing)
                 else
-                    Fail(:test,$(Expr(:quote, factex)), fail_data, nothing)
+                    @show 2
+                    @show fail_data
+                    @show more_data
+                    Fail(:test,$(Expr(:quote, factex)), [fail_data, more_data],
+                        nothing)
                 end
             catch err
                 Error(:test_error,$(Expr(:quote, factex)), err, catch_backtrace())
