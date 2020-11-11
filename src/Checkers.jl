@@ -1,8 +1,8 @@
 module Checkers
 
 using Reexport
-@reexport using Base.Test
-import Base.Test: Result, Pass, Fail, Error, record, get_testset
+@reexport using Test
+import Test: Result, Pass, Fail, Error, record, get_testset
 
 export @test_formany, @test_cases, @test_forall, @test_exists
 
