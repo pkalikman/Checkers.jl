@@ -6,7 +6,26 @@
 [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://pkalikman.github.io/Checkers.jl/latest)
 [![Join the chat at https://gitter.im/Checkers-jl/Lobby](https://badges.gitter.im/Checkers-jl/Lobby.svg)](https://gitter.im/Checkers-jl/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+# NEWS -- 2020 Nov. 11
 
+This package is currently not working.
+
+I am looking into updating it for Julia 1.5
+
+However, it seems that all of the functionality in this package can be replicated,
+albeit with slightly clunkier syntax,
+just using 
+
+    @testset "Example" begin
+        for x in [Explicit Cases, Perhaps Constructed Using rand()]
+            @test Property(x)
+        end
+    end
+
+
+
+
+## Old Readme
 
 Automated testing macros
 inspired by a [Julia implementation](https://github.com/pao/QuickCheck.jl)
