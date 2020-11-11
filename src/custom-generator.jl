@@ -1,6 +1,6 @@
-function custom_generator{T<:Union{AbstractFloat,Integer}}(var_type::Type{T},
+function custom_generator(var_type::Type{T},
     a::Number, b::Number, type_a::Bool, type_b::Bool,
-    p::Float64 = 1.5)
+    p::Float64 = 1.5) where T <: Union{AbstractFloat,Integer}
     if a > b
         error("Generator received incorrect lower and upper bounds:
         $a > $b")
